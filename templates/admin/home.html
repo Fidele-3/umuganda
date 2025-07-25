@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Umuganda Community Service</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --white: #ffffff;
+            --dark-color: #343a40;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--dark-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .logo {
+            margin-bottom: 2rem;
+            font-size: 3rem;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            color: var(--secondary-color);
+        }
+
+        .about-umuganda {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin-bottom: 3rem;
+            text-align: left;
+        }
+
+        .about-umuganda h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .about-umuganda p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .login-btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(74, 107, 255, 0.3);
+            margin-top: 1rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(74, 107, 255, 0.4);
+            background-color: #3a5bd9;
+        }
+
+        .login-btn i {
+            margin-left: 8px;
+        }
+
+        footer {
+            background: linear-gradient(135deg, var(--dark-color), #1a1a1a);
+            color: var(--white);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--success-color);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="hero">
+        <div class="logo">
+            <i class="fas fa-hands-helping"></i>
+            <h1>Umuganda Community Service</h1>
+        </div>
+        
+        <p class="tagline">Building stronger communities through collective action</p>
+        
+        <div class="about-umuganda">
+            <h2>About Umuganda</h2>
+            <p>Umuganda is a traditional community work practice in Rwanda where citizens come together to contribute to the development of their communities. This monthly activity helps maintain public infrastructure, protect the environment, and strengthen social cohesion.</p>
+            <p>Participation in Umuganda is mandatory for all able-bodied citizens aged 18 to 65. The program has played a significant role in Rwanda's post-genocide reconstruction and continues to be a cornerstone of community development.</p>
+            <p>Through this portal, community administrators can manage Umuganda sessions, track participation, and ensure the smooth operation of this important national program.</p>
+        </div>
+        
+        <a href="{% url 'admin_login' %}" class="login-btn">
+            Administrator Login <i class="fas fa-arrow-right"></i>
+        </a>
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Support</a>
+            </div>
+            <div class="copyright">
+                &copy; 2023 Umuganda Community Service System. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple animation for the login button on hover
+        document.querySelector('.login-btn').addEventListener('mouseenter', function() {
+            this.querySelector('i').style.transform = 'translateX(5px)';
+        });
+        
+        document.querySelector('.login-btn').addEventListener('mouseleave', function() {
+            this.querySelector('i').style.transform = 'translateX(0)';
+        });
+    </script>
+</body>
+</html>
