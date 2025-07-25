@@ -12,10 +12,16 @@ ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
 # DATABASE
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get("DATABASE_URL")
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'umuganda',
+        'USER': 'umuganda_user',
+        'PASSWORD': 'liTxrFhyok4vD7UVIqooA2Vja3wBS57Y',
+        'HOST': 'dpg-d21rrrumcj7s73et6vk0-a.oregon-postgres.render.com',
+        'PORT': '5432',
+    }
 }
+
 
 # PUBLIC API URL (used in verification/reset/email links)
 PUBLIC_API_URL = os.environ.get("PUBLIC_API_URL", "http://localhost:8000")
