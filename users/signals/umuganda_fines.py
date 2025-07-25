@@ -8,11 +8,11 @@ from umuganda.models import UmugandaSession, Attendance, Fine
 @receiver(post_save, sender=UmugandaSession)
 def assign_fines_to_absentees(sender, instance: UmugandaSession, created, **kwargs):
     if created:
-        return  # Don't process on session creation
+        return 
 
-    # Ensure the session date has passed
+  
     if instance.date >= now().date():
-        return  # Don't process future sessions
+        return  
 
     # Get all relevant citizens based on scope (village > cell > sector)
     users = CustomUser.objects.filter(user_level='citizen', is_active=True)
