@@ -113,8 +113,9 @@ SIMPLE_JWT = {
 }
 
 # CELERY
-CELERY_BROKER_URL = os.environ.get("REDIS_URL", "redis://localhost:6379/0")
-CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL", "redis://localhost:6379/0")
+CELERY_BROKER_URL = "rediss://default:AdgWAAIjcDEyNDk1YzAxNzMzYWY0NTRiOTc3NTI0MzQwNWNjOGEwN3AxMA@square-grizzly-55318.upstash.io:6379"
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TIMEZONE = "Africa/Kigali"
 CELERY_ENABLE_UTC = False
 
