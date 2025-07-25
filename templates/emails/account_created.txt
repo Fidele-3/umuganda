@@ -1,0 +1,14 @@
+Welcome, {{ full_names }}! 🎉
+
+Your account on Umuganda has been successfully created.
+
+You can now log in using your registered email:
+{{ email }}
+
+If you have any questions or need help, contact us at:
+{{ support_email }}
+
+Thank you,  
+The Umuganda Team
+
+© {{ now|date:"Y" }} Umuganda. All rights reserved.

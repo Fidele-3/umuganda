@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Cell Assignment Required{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm border-danger">
+        <div class="card-header bg-danger text-white">
+            <h4>Access Denied</h4>
+        </div>
+        <div class="card-body">
+            <p class="lead">
+                You have not been assigned to any <strong>sector</strong> yet, so you cannot create or manage Cell.
+            </p>
+            <p>Please contact the system administrator or your superior officer to request an assignment.</p>
+
+            <div class="mt-4">
+                <a href="{% url 'sector_officer_dashboard' %}" class="btn btn-secondary">
+                    &larr; Return to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

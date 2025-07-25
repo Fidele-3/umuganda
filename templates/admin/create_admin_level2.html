@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Sector Officer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4a6bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --white: #ffffff;
+            --sidebar-width: 250px;
+            --header-height: 70px;
+            --footer-height: 60px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #2541b2);
+            color: var(--white);
+            height: var(--header-height);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+            color: var(--warning-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all var(--transition-speed) ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: var(--white);
+            transition: width var(--transition-speed) ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 70%;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: var(--header-height);
+            padding: 2rem;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .form-container {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            width: 100%;
+            max-width: 800px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .form-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .form-header h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+
+        input, select, textarea, .file-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: all var(--transition-speed) ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.2);
+            outline: none;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .file-input {
+            padding: 0.5rem;
+            background-color: #f8f9fa;
+            border: 1px dashed #ccc;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .file-input:hover {
+            background-color: #f0f2f5;
+        }
+
+        .location-selectors {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #3a5bd9;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Form error styles */
+        .errorlist {
+            list-style: none;
+            color: var(--danger-color);
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .field-error {
+            border-color: var(--danger-color) !important;
+        }
+
+        /* Preview image */
+        .image-preview {
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .image-preview img {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--dark-color), #1a1a1a);
+            color: var(--white);
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .message-list {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .message-item {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .message-error {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .message-success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .message-info {
+            background-color: rgba(23, 162, 184, 0.1);
+            color: var(--info-color);
+            border-left: 4px solid var(--info-color);
+        }
+
+        .message-warning {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: var(--warning-color);
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--warning-color);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 0.5rem;
+            }
+
+            .form-container {
+                padding: 1.5rem;
+            }
+
+            .location-selectors {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column-reverse;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            header {
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <span>UmugandaPortal</span>
+        </div>
+        <nav class="nav-links">
+            <a href="{% url 'superadmin_dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{% url 'admin_profile' %}"><i class="fas fa-user"></i> Profile</a>
+            <a href="{% url 'create_sector_officer' %}"><i class="fas fa-user-plus"></i> Create Admin</a>
+            <a href="{% url 'create_sector' %}"><i class="fas fa-building"></i> Create sector</a>
+            <a href="{% url 'logout-admin' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </nav>
+    </header>
+
+    <div class="main-content">
+        {% include "base2.html" %}
+        <div class="form-container">
+            <div class="form-header">
+                <h2><i class="fas fa-user-plus"></i> Create New Sector Officer</h2>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" id="adminForm">
+                {% csrf_token %}
+                
+                {% if form.non_field_errors %}
+                    <div class="form-group error">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+                
+                <!-- Personal Information -->
+                <div class="form-section">
+                    <h3><i class="fas fa-user"></i> Personal Information</h3>
+                    <div class="form-group">
+                        <label for="{{ form.full_names.id_for_label }}">full_names</label>
+                        {{ form.full_names }}
+                        {% if form.full_names.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.full_names.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.email.id_for_label }}">Email</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.email.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.password1.id_for_label }}">Password</label>
+                        {{ form.password1 }}
+                        {% if form.password1.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.password1.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.password2.id_for_label }}">Password Confirmation</label>
+                        {{ form.password2 }}
+                        {% if form.password2.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.password2.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Location Information -->
+                <div class="form-section">
+                    <h3><i class="fas fa-map-marker-alt"></i> Location Information</h3>
+                    <div class="location-selectors">
+                        <div class="form-group">
+                            <label for="{{ form.province.id_for_label }}">Province</label>
+                            {{ form.province }}
+                            {% if form.province.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.province.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.district.id_for_label }}">District</label>
+                            {{ form.district }}
+                            {% if form.district.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.district.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.sector.id_for_label }}">Sector</label>
+                            {{ form.sector }}
+                            {% if form.sector.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.sector.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.cell.id_for_label }}">Cell</label>
+                            {{ form.cell }}
+                            {% if form.cell.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.cell.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.village.id_for_label }}">Village</label>
+                            {{ form.village }}
+                            {% if form.village.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.village.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Additional Information -->
+                <div class="form-section">
+                    <h3><i class="fas fa-info-circle"></i> Additional Information</h3>
+                    {% for field in form %}
+                        {% if field.name not in 'full_names,email,password1,password2,province,district,sector,cell,village' %}
+                            <div class="form-group {% if field.errors %}error{% endif %}">
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {% if field.field.widget.input_type == 'file' %}
+                                    <div class="file-input" onclick="document.getElementById('{{ field.id_for_label }}').click()">
+                                        <i class="fas fa-cloud-upload-alt"></i> Click to upload file
+                                        {{ field }}
+                                    </div>
+                                    <div class="image-preview" id="preview-{{ field.id_for_label }}">
+                                        <img id="previewImage-{{ field.id_for_label }}" src="#" alt="Preview" />
+                                    </div>
+                                {% else %}
+                                    {{ field }}
+                                {% endif %}
+                                {% if field.errors %}
+                                    <ul class="errorlist">
+                                        {% for error in field.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                {% if field.help_text %}
+                                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="form-actions">
+                    <a href="{% url 'superadmin_dashboard' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                    <button type="submit" class="btn btn-success" id="submitBtn">
+                        <i class="fas fa-user-plus"></i> Create Admin
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+            </div>
+            <div class="copyright">
+                &copy; 2023 UmugandaPortal. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // CSRF setup
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        // Add interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add focus effects to form fields
+            const formFields = document.querySelectorAll('input, select, textarea');
+            formFields.forEach(field => {
+                field.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+                
+                field.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('focused');
+                });
+            });
+
+            // Add click effect to buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('mousedown', function() {
+                    this.style.transform = 'translateY(1px)';
+                    this.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.1)';
+                });
+                
+                button.addEventListener('mouseup', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                });
+            });
+
+            // Image preview for file inputs
+            const fileInputs = document.querySelectorAll('input[type="file"]');
+            fileInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    const previewId = 'preview-' + this.id;
+                    const previewElement = document.getElementById(previewId);
+                    
+                    if (this.files && this.files[0]) {
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            const imgPreview = document.getElementById('previewImage-' + input.id);
+                            imgPreview.src = e.target.result;
+                            previewElement.style.display = 'block';
+                        }
+                        
+                        reader.readAsDataURL(this.files[0]);
+                    }
+                });
+            });
+
+            // Form validation
+            const form = document.getElementById('adminForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const submitBtn = document.getElementById('submitBtn');
+                    submitBtn.innerHTML = '<span class="spinner"></span> Creating...';
+                    submitBtn.disabled = true;
+                    
+                    let isValid = true;
+                    const requiredFields = this.querySelectorAll('[required]');
+                    
+                    requiredFields.forEach(field => {
+                        if (!field.value.trim()) {
+                            field.classList.add('field-error');
+                            isValid = false;
+                        } else {
+                            field.classList.remove('field-error');
+                        }
+                    });
+
+                    if (!isValid) {
+                        e.preventDefault();
+                        submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> Create Admin';
+                        submitBtn.disabled = false;
+                        showNotification('Please fill in all required fields', 'error');
+                    }
+                });
+            }
+        });
+
+        // Location AJAX functionality
+        $(document).ready(function() {
+            // Trigger district update
+            $('#id_province').change(function () {
+                const provinceId = $(this).val();
+                if (!provinceId) return;
+                
+                $('#id_district').prop('disabled', true);
+                $('#id_sector').prop('disabled', true);
+                $('#id_cell').prop('disabled', true);
+                $('#id_village').prop('disabled', true);
+                
+                $.ajax({
+                    url: '/ajax/get-districts/',
+                    data: {
+                        'province_id': provinceId,
+                        'csrfmiddlewaretoken': csrftoken
+                    },
+                    dataType: 'json',
+                    beforeSend: function() {
+                        $('#id_district').html('<option value="">Loading...</option>');
+                    },
+                    success: function (data) {
+                        $('#id_district').empty().prop('disabled', false);
+                        $('#id_sector').empty().append('<option value="">---------</option>').prop('disabled', true);
+                        $('#id_cell').empty().append('<option value="">---------</option>').prop('disabled', true);
+                        $('#id_village').empty().append('<option value="">---------</option>').prop('disabled', true);
+                        $('#id_district').append('<option value="">---------</option>');
+                        data.districts.forEach(function (district) {
+                            $('#id_district').append(
+                                $('<option></option>').val(district.id).text(district.name)
+                            );
+                        });
+                    },
+                    error: function() {
+                        $('#id_district').empty().append('<option value="">Error loading districts</option>');
+                    }
+                });
+            });
+
+            // Trigger sector update
+            $('#id_district').change(function () {
+                const districtId = $(this).val();
+                if (!districtId) return;
+                
+                $('#id_sector').prop('disabled', true);
+                $('#id_cell').prop('disabled', true);
+                $('#id_village').prop('disabled', true);
+                
+                $.ajax({
+                    url: '/ajax/get-sectors/',
+                    data: {
+                        'district_id': districtId,
+                        'csrfmiddlewaretoken': csrftoken
+                    },
+                    dataType: 'json',
+                    beforeSend: function() {
+                        $('#id_sector').html('<option value="">Loading...</option>');
+                    },
+                    success: function (data) {
+                        $('#id_sector').empty().prop('disabled', false);
+                        $('#id_cell').empty().append('<option value="">---------</option>').prop('disabled', true);
+                        $('#id_village').empty().append('<option value="">---------</option>').prop('disabled', true);
+                        $('#id_sector').append('<option value="">---------</option>');
+                        data.sectors.forEach(function (sector) {
+                            $('#id_sector').append(
+                                $('<option></option>').val(sector.id).text(sector.name)
+                            );
+                        });
+                    },
+                    error: function() {
+                        $('#id_sector').empty().append('<option value="">Error loading sectors</option>');
+                    }
+                });
+            });
+
+            // Trigger cell update
+            $('#id_sector').change(function () {
+                const sectorId = $(this).val();
+                if (!sectorId) return;
+                
+                $('#id_cell').prop('disabled', true);
+                $('#id_village').prop('disabled', true);
+                
+                $.ajax({
+                    url: '/ajax/get-cells/',
+                    data: {
+                        'sector_id': sectorId,
+                        'csrfmiddlewaretoken': csrftoken
+                    },
+                    dataType: 'json',
+                    beforeSend: function() {
+                        $('#id_cell').html('<option value="">Loading...</option>');
+                    },
+                    success: function (data) {
+                        $('#id_cell').empty().prop('disabled', false);
+                        $('#id_village').empty().append('<option value="">---------</option>').prop('disabled', true);
+                        $('#id_cell').append('<option value="">---------</option>');
+                        data.cells.forEach(function (cell) {
+                            $('#id_cell').append(
+                                $('<option></option>').val(cell.id).text(cell.name)
+                            );
+                        });
+                    },
+                    error: function() {
+                        $('#id_cell').empty().append('<option value="">Error loading cells</option>');
+                    }
+                });
+            });
+
+            // Trigger village update
+            $('#id_cell').change(function () {
+                const cellId = $(this).val();
+                if (!cellId) return;
+                
+                $('#id_village').prop('disabled', true);
+                
+                $.ajax({
+                    url: '/ajax/get-villages/',
+                    data: {
+                        'cell_id': cellId,
+                        'csrfmiddlewaretoken': csrftoken
+                    },
+                    dataType: 'json',
+                    beforeSend: function() {
+                        $('#id_village').html('<option value="">Loading...</option>');
+                    },
+                    success: function (data) {
+                        $('#id_village').empty().prop('disabled', false);
+                        $('#id_village').append('<option value="">---------</option>');
+                        data.villages.forEach(function (village) {
+                            $('#id_village').append(
+                                $('<option></option>').val(village.id).text(village.name)
+                            );
+                        });
+                    },
+                    error: function() {
+                        $('#id_village').empty().append('<option value="">Error loading villages</option>');
+                    }
+                });
+            });
+        });
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 
+                                  type === 'error' ? 'exclamation-circle' : 
+                                  type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                ${message}
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Add notification styles dynamically
+        const notificationStyles = document.createElement('style');
+        notificationStyles.textContent = `
+            .notification {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 4px;
+                color: white;
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.3s ease;
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .notification.show {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            
+            .notification.info {
+                background-color: var(--info-color);
+            }
+            
+            .notification.success {
+                background-color: var(--success-color);
+            }
+            
+            .notification.warning {
+                background-color: var(--warning-color);
+                color: var(--dark-color);
+            }
+            
+            .notification.error {
+                background-color: var(--danger-color);
+            }
+        `;
+        document.head.appendChild(notificationStyles);
+    </script>
+</body>
+</html>

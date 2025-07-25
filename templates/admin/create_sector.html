@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Sector | UmugandaPortal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --white: #ffffff;
+            --sidebar-width: 250px;
+            --header-height: 70px;
+            --footer-height: 60px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #2541b2);
+            color: var(--white);
+            height: var(--header-height);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+            color: var(--warning-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all var(--transition-speed) ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: var(--header-height);
+            padding: 2rem;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .form-container {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            width: 100%;
+            max-width: 600px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .form-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .form-header h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: all var(--transition-speed) ease;
+            background-color: var(--white);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236c757d' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
+        }
+
+        select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.2);
+            outline: none;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: var(--white);
+        }
+
+        /* Form error styles */
+        .errorlist {
+            list-style: none;
+            color: var(--danger-color);
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .field-error {
+            border-color: var(--danger-color) !important;
+        }
+
+        /* Loading state */
+        .loading {
+            position: relative;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 1s linear infinite;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--dark-color), #1a1a1a);
+            color: var(--white);
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: translateY(-50%) rotate(360deg);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 0.5rem;
+            }
+
+            .form-container {
+                padding: 1.5rem;
+            }
+
+            .form-actions {
+                flex-direction: column-reverse;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            header {
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <span>UmugandaPortal</span>
+        </div>
+        <nav class="nav-links">
+            <a href="{% url 'superadmin_dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{% url 'admin_profile' %}"><i class="fas fa-user"></i> Profile</a>
+            <a href="{% url 'create_sector_officer' %}"><i class="fas fa-user-plus"></i> Create Admin</a>
+            <a href="{% url 'create_sector' %}" class="active"><i class="fas fa-building"></i> Create Sector</a>
+            <a href="{% url 'logout-admin' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </nav>
+    </header>
+
+    <div class="main-content">
+        <div class="form-container">
+            <div class="form-header">
+                <h2><i class="fas fa-building"></i> Create New Sector</h2>
+            </div>
+
+            <form method="post" id="sectorForm">
+                {% csrf_token %}
+                
+                {% if form.non_field_errors %}
+                    <div class="form-group">
+                        <div class="message-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ form.non_field_errors }}
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <!-- Province Field -->
+                <div class="form-group {% if form.province.errors %}error{% endif %}">
+                    <label for="{{ form.province.id_for_label }}">{{ form.province.label }}</label>
+                    {{ form.province }}
+                    {% if form.province.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.province.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <!-- District Field -->
+                <div class="form-group {% if form.district.errors %}error{% endif %}">
+                    <label for="{{ form.district.id_for_label }}">{{ form.district.label }}</label>
+                    {{ form.district }}
+                    {% if form.district.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.district.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <!-- Sector Field -->
+                <div class="form-group {% if form.sector.errors %}error{% endif %}">
+                    <label for="{{ form.sector.id_for_label }}">{{ form.sector.label }}</label>
+                    {{ form.sector }}
+                    {% if form.sector.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.sector.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-actions">
+                    <a href="{% url 'superadmin_dashboard' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-success" id="submitBtn">
+                        <i class="fas fa-plus-circle"></i> Create Sector
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact Us</a>
+        </div>
+        <div class="copyright">
+            &copy; 2023 UmugandaPortal. All rights reserved.
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // CSRF token setup for AJAX
+            $(document).ready(function() {
+        // CSRF token setup
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        // Province change event
+        $('#id_province').change(function() {
+            const provinceId = $(this).val();
+            const $districtSelect = $('#id_district');
+            const $sectorSelect = $('#id_sector');
+            
+            // Reset dependent fields
+            $districtSelect.empty().append('<option value="">---------</option>').prop('disabled', true);
+            $sectorSelect.empty().append('<option value="">---------</option>').prop('disabled', true);
+            
+            if (provinceId) {
+                $districtSelect.prop('disabled', true).html('<option value="">Loading...</option>');
+                
+                $.ajax({
+                    url: '/ajax/get-districts/',
+                    data: {
+                        'province_id': provinceId,
+                        'csrfmiddlewaretoken': csrftoken
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        $districtSelect.empty().prop('disabled', false);
+                        $districtSelect.append('<option value="">---------</option>');
+                        $.each(data.districts, function(index, district) {
+                            $districtSelect.append(
+                                $('<option></option>').val(district.id).text(district.name)
+                            );
+                        });
+                    },
+                    error: function() {
+                        $districtSelect.empty().append('<option value="">Error loading districts</option>');
+                    }
+                });
+            }
+        });
+
+        // District change event
+        $('#id_district').change(function() {
+            const districtId = $(this).val();
+            const $sectorSelect = $('#id_sector');
+            
+            // Reset dependent field
+            $sectorSelect.empty().append('<option value="">---------</option>').prop('disabled', true);
+            
+            if (districtId) {
+                $sectorSelect.prop('disabled', true).html('<option value="">Loading...</option>');
+                
+                $.ajax({
+                    url: '/ajax/get-sectors/',
+                    data: {
+                        'district_id': districtId,
+                        'csrfmiddlewaretoken': csrftoken
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        $sectorSelect.empty().prop('disabled', false);
+                        $sectorSelect.append('<option value="">---------</option>');
+                        $.each(data.sectors, function(index, sector) {
+                            $sectorSelect.append(
+                                $('<option></option>').val(sector.id).text(sector.name)
+                            );
+                        });
+                    },
+                    error: function() {
+                        $sectorSelect.empty().append('<option value="">Error loading sectors</option>');
+                    }
+                });
+            }
+        });
+
+        // Form submission handling
+        $('#sectorForm').on('submit', function(e) {
+            e.preventDefault(); // This is critical to stop the normal form submission
+            
+            const $form = $(this);
+            const $submitBtn = $('#submitBtn');
+            
+            $submitBtn.prop('disabled', true).addClass('loading');
+            
+            // Make sure we're using POST
+            $.ajax({
+                url: $form.attr('action'),
+                type: 'POST', // Explicitly set to POST
+                data: $form.serialize(),
+                dataType: 'json',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrftoken // Add CSRF token in headers
+                }
+            })
+            .done(function(data) {
+                if (data.success) {
+                    showNotification('Sector created successfully!', 'success');
+                    setTimeout(function() {
+                        window.location.href = data.redirect_url || "{% url 'superadmin_dashboard' %}";
+                    }, 1500);
+                } else {
+                    showNotification('Please correct the errors below', 'error');
+                    // Clear previous errors
+                    $('.errorlist').remove();
+                    $('.field-error').removeClass('field-error');
+                    
+                    // Handle form errors
+                    if (data.errors) {
+                        $.each(data.errors, function(field, errors) {
+                            const $field = $('#id_' + field);
+                            $field.addClass('field-error');
+                            const $formGroup = $field.closest('.form-group');
+                            const $errorList = $('<ul class="errorlist"></ul>');
+                            
+                            $.each(errors, function(index, error) {
+                                $errorList.append($('<li></li>').text(error));
+                            });
+                            
+                            $formGroup.append($errorList);
+                        });
+                    }
+                }
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                showNotification('An error occurred: ' + textStatus, 'error');
+                console.error("AJAX Error:", textStatus, errorThrown);
+            })
+            .always(function() {
+                $submitBtn.prop('disabled', false).removeClass('loading');
+            });
+        });
+
+        // Initialize form if there are existing values
+        if ($('#id_province').val()) {
+            $('#id_province').trigger('change');
+            
+            // Delay district trigger to allow AJAX to complete
+            setTimeout(function() {
+                if ($('#id_district').val()) {
+                    $('#id_district').trigger('change');
+                }
+            }, 500);
+        }
+    });
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const $notification = $(
+                `<div class="notification ${type}">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 
+                                      type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    ${message}
+                </div>`
+            );
+            
+            $('body').append($notification);
+            
+            setTimeout(() => {
+                $notification.addClass('show');
+            }, 100);
+            
+            setTimeout(() => {
+                $notification.removeClass('show');
+                setTimeout(() => {
+                    $notification.remove();
+                }, 300);
+            }, 5000);
+        }
+
+        // Add notification styles
+        $('head').append(`
+            <style>
+                .notification {
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    padding: 15px 20px;
+                    border-radius: 4px;
+                    color: white;
+                    opacity: 0;
+                    transform: translateY(20px);
+                    transition: all 0.3s ease;
+                    z-index: 1000;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+                .notification.show {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+                .notification.info {
+                    background-color: var(--info-color);
+                }
+                .notification.success {
+                    background-color: var(--success-color);
+                }
+                .notification.error {
+                    background-color: var(--danger-color);
+                }
+            </style>
+        `);
+
+        // Show any Django messages
+        {% if messages %}
+            {% for message in messages %}
+                showNotification("{{ message|escapejs }}", "{{ message.tags }}");
+            {% endfor %}
+        {% endif %}
+    </script>
+</body>
+</html>

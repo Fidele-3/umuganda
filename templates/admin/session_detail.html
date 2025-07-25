@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Umuganda Session Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a6bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --white: #ffffff;
+            --sidebar-width: 250px;
+            --header-height: 70px;
+            --footer-height: 60px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #2541b2);
+            color: var(--white);
+            height: var(--header-height);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+            color: var(--warning-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all var(--transition-speed) ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: var(--header-height);
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .session-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .session-header h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .session-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .status-upcoming {
+            background-color: rgba(74, 107, 255, 0.1);
+            color: var(--primary-color);
+        }
+
+        .status-active {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-completed {
+            background-color: rgba(108, 117, 125, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .session-card {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .session-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            padding: 1rem;
+            border-radius: 6px;
+            background-color: rgba(248, 249, 250, 0.5);
+        }
+
+        .detail-item h4 {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-item p {
+            font-size: 1rem;
+            font-weight: 500;
+            padding-left: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(74, 107, 255, 0.25);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #3a5bd9;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .edit-disabled {
+            padding: 1.5rem;
+            background-color: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid var(--warning-color);
+            color: #856404;
+            border-radius: 6px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--dark-color), #1a1a1a);
+            color: var(--white);
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--warning-color);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 0.5rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .session-details {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            header {
+                padding: 0 1rem;
+                height: 60px;
+            }
+            
+            .logo {
+                font-size: 1.2rem;
+            }
+            
+            .nav-links a span {
+                display: none;
+            }
+            
+            .nav-links a i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-hands-helping"></i>
+            <span>Umuganda Portal</span>
+        </div>
+        <nav class="nav-links">
+            <a href="{% url 'cell_officer_dashboard' %}">
+                <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+            </a>
+            <a href="{% url 'umuganda_session_list' %}">
+                <i class="fas fa-calendar-alt"></i> <span>Activities</span>
+            </a>
+            {% if session.id %}
+                <a href="{% url 'umuganda_fines_list' session_id=session.id %}">
+                    <i class="fas fa-money-bill-wave"></i> <span>Fines</span>
+                </a>
+            {% else %}
+                <a class="disabled" href="#" style="opacity: 0.5; pointer-events: none;">
+                    <i class="fas fa-money-bill-wave"></i> <span>Fines</span>
+                </a>
+            {% endif %}
+            <a href="{% url 'umuganda_feedback_list' %}">
+                <i class="fas fa-comments"></i> <span>Feedback</span>
+            </a>
+            <a href="{% url 'logout-admin' %}">
+                <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+            </a>
+        </nav>
+    </header>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="session-header">
+                <h2><i class="fas fa-calendar-day"></i> Umuganda Session for {{ session.date }}</h2>
+                <span class="session-status 
+                    {% if session.date == today %}status-active
+                    {% elif session.date > today %}status-upcoming
+                    {% else %}status-completed{% endif %}">
+                    {% if session.date == today %}Active
+                    {% elif session.date > today %}Upcoming
+                    {% else %}Completed{% endif %}
+                </span>
+            </div>
+
+            {% if can_edit and days_remaining <= 2 %}
+                <div class="edit-disabled">
+                    <i class="fas fa-exclamation-triangle fa-2x"></i>
+                    <div>
+                        <h4>Editing Disabled</h4>
+                        <p>Session details can only be edited when there are more than 2 days remaining. Current days remaining: {{ days_remaining }}</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="session-card">
+                <div class="session-details">
+                    <div class="detail-item">
+                        <h4><i class="fas fa-map-marker-alt"></i> Sector</h4>
+                        <p>{{ session.sector.name }}</p>
+                    </div>
+                    <div class="detail-item">
+                        <h4><i class="fas fa-home"></i> Cell</h4>
+                        <p>
+                            {% if session.cell %}
+                                {{ session.cell.name }}
+                            {% else %}
+                                Not Assigned
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="detail-item">
+                        <h4><i class="fas fa-map-marked-alt"></i> Village</h4>
+                        <p>
+                            {% if session.village %}
+                                {{ session.village.name }}
+                            {% else %}
+                                Not Assigned
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="detail-item">
+                        <h4><i class="fas fa-calendar-plus"></i> Created At</h4>
+                        <p>{{ session.created_at }}</p>
+                    </div>
+                    <div class="detail-item">
+                        <h4><i class="fas fa-calendar-check"></i> Updated At</h4>
+                        <p>{{ session.updated_at }}</p>
+                    </div>
+                    <div class="detail-item">
+                        <h4><i class="fas fa-user-tie"></i> Set By Sector Officer</h4>
+                        <p>
+                            {% if session.created_by %}
+                                {{ session.created_by.get_full_name }}
+                            {% else %}
+                                Unknown
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="detail-item">
+                        <h4><i class="fas fa-user-edit"></i> Updated By Cell Officer</h4>
+                        <p>
+                            {% if session.updated_by_cell_admin %}
+                                {{ session.updated_by_cell_admin.get_full_name }}
+                            {% else %}
+                                Not Yet Updated
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <hr>
+
+                {% if can_edit and days_remaining > 2 %}
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="id_village"><i class="fas fa-map-marked-alt"></i> Village</label>
+                            {{ form.village }}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_description"><i class="fas fa-align-left"></i> Description</label>
+                            {{ form.description }}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_tools_needed"><i class="fas fa-tools"></i> Tools Needed</label>
+                            {{ form.tools_needed }}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_fines_policy"><i class="fas fa-money-bill-wave"></i> Fines Policy</label>
+                            {{ form.fines_policy }}
+                        </div>
+
+                        <div class="action-buttons">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update Session
+                            </button>
+                            <a href="{% url 'umuganda_session_detail' session.id %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                {% else %}
+                    <div class="session-details">
+                        <div class="detail-item">
+                            <h4><i class="fas fa-align-left"></i> Description</h4>
+                            <p>{{ session.description|default:"Not provided" }}</p>
+                        </div>
+                        <div class="detail-item">
+                            <h4><i class="fas fa-tools"></i> Tools Needed</h4>
+                            <p>{{ session.tools_needed|default:"Not specified" }}</p>
+                        </div>
+                        <div class="detail-item">
+                            <h4><i class="fas fa-money-bill-wave"></i> Fines Policy</h4>
+                            <p>{{ session.fines_policy|default:"Not specified" }}</p>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        {% if can_edit and days_remaining > 2 %}
+                            <a href="?edit=true" class="btn btn-primary">
+                                <i class="fas fa-edit"></i> Edit Session
+                            </a>
+                        {% endif %}
+                        <a href="{% url 'umuganda_session_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Sessions
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#"><i class="fas fa-lock"></i> Privacy Policy</a>
+                <a href="#"><i class="fas fa-file-alt"></i> Terms of Service</a>
+                <a href="#"><i class="fas fa-envelope"></i> Contact Us</a>
+            </div>
+            <div class="copyright">
+                &copy; {% now "Y" %} Umuganda Management System. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add interactive elements to buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('mousedown', function() {
+                    this.style.transform = 'translateY(1px)';
+                    this.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.1)';
+                });
+                
+                button.addEventListener('mouseup', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                });
+            });
+
+            const form = document.querySelector('form');
+            if (form && {{ days_remaining }} <= 2) {
+                form.querySelectorAll('input, textarea, select').forEach(element => {
+                    element.disabled = true;
+                });
+                form.querySelector('button[type="submit"]').disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>

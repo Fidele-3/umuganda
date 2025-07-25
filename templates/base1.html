@@ -1,0 +1,128 @@
+<!-- templates/admin/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Create admin levl 3{% endblock %}</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+
+
+    {% block content %}
+    {% endblock %}
+
+    <script>
+        // CSRF setup
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        // Trigger district update
+        $('#id_province').change(function () {
+            const provinceId = $(this).val();
+            $.ajax({
+                url: '/ajax/get-districts/',
+                data: {
+                    'province_id': provinceId
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('#id_district').empty();
+                    $('#id_sector').empty().append('<option value="">---------</option>');
+                    $('#id_cell').empty().append('<option value="">---------</option>');
+                    $('#id_village').empty().append('<option value="">---------</option>');
+                    $('#id_district').append('<option value="">---------</option>');
+                    data.districts.forEach(function (district) {
+                        $('#id_district').append(
+                            $('<option></option>').val(district.id).text(district.name)
+                        );
+                    });
+                }
+            });
+        });
+
+        // Trigger sector update
+        $('#id_district').change(function () {
+            const districtId = $(this).val();
+            $.ajax({
+                url: '/ajax/get-sectors/',
+                data: {
+                    'district_id': districtId
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('#id_sector').empty();
+                    $('#id_cell').empty().append('<option value="">---------</option>');
+                    $('#id_village').empty().append('<option value="">---------</option>');
+                    $('#id_sector').append('<option value="">---------</option>');
+                    data.sectors.forEach(function (sector) {
+                        $('#id_sector').append(
+                            $('<option></option>').val(sector.id).text(sector.name)
+                        );
+                    });
+                }
+            });
+        });
+
+        // Trigger cell update
+        $('#id_sector').change(function () {
+            const sectorId = $(this).val();
+            $.ajax({
+                url: '/ajax/get-cells/',
+                data: {
+                    'sector_id': sectorId
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('#id_cell').empty();
+                    $('#id_village').empty().append('<option value="">---------</option>');
+                    $('#id_cell').append('<option value="">---------</option>');
+                    data.cells.forEach(function (cell) {
+                        $('#id_cell').append(
+                            $('<option></option>').val(cell.id).text(cell.name)
+                        );
+                    });
+                }
+            });
+        });
+
+        // Trigger village update
+        $('#id_cell').change(function () {
+            const cellId = $(this).val();
+            $.ajax({
+                url: '/ajax/get-villages/',
+                data: {
+                    'cell_id': cellId
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('#id_village').empty();
+                    $('#id_village').append('<option value="">---------</option>');
+                    data.villages.forEach(function (village) {
+                        $('#id_village').append(
+                            $('<option></option>').val(village.id).text(village.name)
+                        );
+                    });
+                }
+            });
+        });
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Umuganda Overview | UmugandaPortal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reusing all the CSS from the dashboard */
+        :root {
+            --primary-color: #4a6bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --white: #ffffff;
+            --sidebar-width: 250px;
+            --header-height: 70px;
+            --footer-height: 60px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #2541b2);
+            color: var(--white);
+            height: var(--header-height);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+            color: var(--warning-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all var(--transition-speed) ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: var(--white);
+            transition: width var(--transition-speed) ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 70%;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: var(--header-height);
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .welcome-section {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .welcome-section h1 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #3a5bd9;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h3 {
+            color: var(--secondary-color);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        /* Actions Section */
+        .actions-section {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            animation: fadeIn 0.7s ease-in-out;
+        }
+
+        .actions-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Recent Actions Section */
+        .recent-actions {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            animation: fadeIn 0.9s ease-in-out;
+            overflow-x: auto;
+        }
+
+        .recent-actions h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: var(--white);
+            font-weight: 500;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .view-more {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Agencies Section */
+        .agencies-section {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            animation: fadeIn 1.1s ease-in-out;
+        }
+
+        .agencies-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .agency-list {
+            list-style: none;
+        }
+
+        .agency-list li {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color var(--transition-speed) ease;
+        }
+
+        .agency-list li:last-child {
+            border-bottom: none;
+        }
+
+        .agency-list li:hover {
+            background-color: #f8f9fa;
+        }
+
+        .agency-email {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+        .message-list {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .message-item {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .message-error {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .message-success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .message-info {
+            background-color: rgba(23, 162, 184, 0.1);
+            color: var(--info-color);
+            border-left: 4px solid var(--info-color);
+        }
+
+        .message-warning {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: var(--warning-color);
+            border-left: 4px solid var(--warning-color);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--dark-color), #1a1a1a);
+            color: var(--white);
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--warning-color);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* ... (include all the CSS from the original dashboard) ... */
+
+        /* Additional styles for Umuganda Overview */
+        .umuganda-section {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .umuganda-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .sector-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .sector-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .sector-title {
+            font-size: 1.3rem;
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+
+        .sector-officer {
+            color: var(--secondary-color);
+            font-size: 0.95rem;
+        }
+
+        .session-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .session-table th {
+            background-color: var(--info-color);
+            color: var(--white);
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .session-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .session-table tr:hover {
+            background-color: rgba(23, 162, 184, 0.05);
+        }
+
+        .no-sessions {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--secondary-color);
+            font-style: italic;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background-color: rgba(74, 107, 255, 0.1);
+            color: var(--primary-color);
+        }
+
+        .badge-success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+        }
+
+        .badge-warning {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: var(--warning-color);
+        }
+
+        .session-details-toggle {
+            color: var(--primary-color);
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .session-details {
+            display: none;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+
+        .session-details.active {
+            display: block;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            min-width: 150px;
+            color: var(--secondary-color);
+        }
+
+        .detail-value {
+            flex: 1;
+        }
+
+        .actions-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sector-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .session-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <span>UmugandaPortal</span>
+        </div>
+        <nav class="nav-links">
+            <a href="{% url 'superadmin_dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{% url 'admin_profile' %}"><i class="fas fa-user"></i> Profile</a>
+            <a href="{% url 'create_sector_officer' %}"><i class="fas fa-user-plus"></i> Create Admin</a>
+            <a href="{% url 'create_sector' %}"><i class="fas fa-building"></i> Create sector</a>
+            <a href="{% url 'logout-admin' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </nav>
+    </header>
+
+    <div class="main-content">
+        <section class="welcome-section">
+            <h1>Umuganda Overview <span class="pulse">{{ super_admin.full_names }}</span></h1>
+            <p>Comprehensive view of all Umuganda sessions across sectors</p>
+            <a href="{% url 'superadmin_dashboard' %}" class="btn btn-primary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </section>
+
+        <section class="umuganda-section">
+            <h2><i class="fas fa-calendar-check"></i> Sector-wise Umuganda Sessions</h2>
+            
+            {% if sector_data %}
+                {% for sector in sector_data %}
+                    <div class="sector-card">
+                        <div class="sector-header">
+                            <div class="sector-title">
+                                <i class="fas fa-map-marker-alt"></i> {{ sector.sector_name }}
+                            </div>
+                            <div class="sector-officer">
+                                <i class="fas fa-user-shield"></i> Managed by: {{ sector.sector_officer }}
+                            </div>
+                        </div>
+
+                        {% if sector.umuganda_sessions %}
+                            <div class="table-responsive">
+                                <table class="session-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Location</th>
+                                            <th>Tools Needed</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for session in sector.umuganda_sessions %}
+                                            <tr>
+                                                <td>{{ session.date|date:"M d, Y" }}</td>
+                                                <td>
+                                                    {% if session.cell %}
+                                                        {{ session.cell }}{% if session.village %}, {{ session.village }}{% endif %}
+                                                    {% else %}
+                                                        Sector-wide
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <div class="badge badge-primary">
+                                                        {{ session.tools_needed|default:"Not specified" }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="session-details-toggle" onclick="toggleDetails('details-{{ forloop.parentloop.counter }}-{{ forloop.counter }}')">
+                                                        <i class="fas fa-info-circle"></i> View Details
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4" class="no-padding">
+                                                    <div id="details-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" class="session-details">
+                                                        <div class="detail-row">
+                                                            <div class="detail-label">Description:</div>
+                                                            <div class="detail-value">{{ session.description|default:"Not provided" }}</div>
+                                                        </div>
+                                                        <div class="detail-row">
+                                                            <div class="detail-label">Fines Policy:</div>
+                                                            <div class="detail-value">{{ session.fines_policy|default:"Not specified" }}</div>
+                                                        </div>
+                                                        <div class="detail-row">
+                                                            <div class="detail-label">Created By:</div>
+                                                            <div class="detail-value">{{ session.created_by|default:"System" }}</div>
+                                                        </div>
+                                                        {% if session.updated_by %}
+                                                        <div class="detail-row">
+                                                            <div class="detail-label">Last Updated:</div>
+                                                            <div class="detail-value">
+                                                                By {{ session.updated_by }} on {{ session.updated_at|date:"M d, Y H:i" }}
+                                                            </div>
+                                                        </div>
+                                                        {% endif %}
+                                                        <div class="actions-row">
+                                                            <button class="btn btn-sm btn-secondary">
+                                                                <i class="fas fa-file-pdf"></i> Generate Report
+                                                            </button>
+                                                            <button class="btn btn-sm btn-warning">
+                                                                <i class="fas fa-envelope"></i> Notify Sector Officer
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="no-sessions">
+                                <i class="fas fa-calendar-times"></i> No Umuganda sessions recorded for this sector yet.
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-sessions" style="padding: 2rem;">
+                    <i class="fas fa-exclamation-circle"></i> No sector data available. Please create sectors and assign sector officers first.
+                </div>
+            {% endif %}
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+            </div>
+            <div class="copyright">
+                &copy; 2023 UmugandaPortal. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Reuse all the JavaScript from the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effect to cards
+            const cards = document.querySelectorAll('.sector-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-3px)';
+                    this.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.1)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
+                });
+            });
+
+            // Add click effect to buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('mousedown', function() {
+                    this.style.transform = 'translateY(1px)';
+                    this.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.1)';
+                });
+                
+                button.addEventListener('mouseup', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                });
+            });
+        });
+
+        // Toggle session details visibility
+        function toggleDetails(id) {
+            const details = document.getElementById(id);
+            details.classList.toggle('active');
+            
+            // Update the toggle icon
+            const toggle = details.previousElementSibling.querySelector('.session-details-toggle i');
+            if (details.classList.contains('active')) {
+                toggle.classList.remove('fa-info-circle');
+                toggle.classList.add('fa-times-circle');
+            } else {
+                toggle.classList.remove('fa-times-circle');
+                toggle.classList.add('fa-info-circle');
+            }
+        }
+
+        // Notification system (reused from dashboard)
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Example: Show welcome notification
+        // showNotification('Umuganda overview loaded successfully', 'success');
+    </script>
+</body>
+</html>

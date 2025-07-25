@@ -1,0 +1,32 @@
+<!-- templates/admin/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %}</title>
+</head>
+<body>
+    <p>
+        <a href="{% url 'admin_profile' %}">
+            <button>View Profile</button>
+        </a>
+    </p>
+
+
+    <p>
+        <a href="{% url 'create_cell_officer' %}">
+            <button>Create Admin</button>
+        </a>
+    </p>
+
+    {% block content %}
+    {% endblock %}
+
+    <a href="{% url 'logout-admin' %}">
+        <button>Logout</button>
+    </a>
+
+
+</body>
+</html>

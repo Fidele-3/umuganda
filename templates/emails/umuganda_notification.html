@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming Umuganda Activity</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #4a6bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 0 0 5px 5px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section-title {
+            color: #4a6bff;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #4a6bff;
+            padding-bottom: 5px;
+        }
+        .location-item {
+            margin-left: 20px;
+            margin-bottom: 5px;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+        }
+        .highlight-box {
+            background-color: #e9f0ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Upcoming Umuganda Activity</h1>
+    </div>
+    
+    <div class="content">
+        <p>Dear {{ full_names }},</p>
+        
+        <div class="highlight-box">
+            <p>You have an upcoming Umuganda activity scheduled:</p>
+            
+            <div class="section">
+                <div class="section-title">Date & Location</div>
+                <p><strong>Date:</strong> {{ session.date|date:"F j, Y" }}</p>
+                <p><strong>Location:</strong></p>
+                <div class="location-item">Sector: {{ session.sector_name }}</div>
+                <div class="location-item">Cell: {{ session.cell_name }}</div>
+                {% if session.village_name %}
+                <div class="location-item">Village: {{ session.village_name }}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Activity Details</div>
+            <p>{{ session.description }}</p>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Tools Needed</div>
+            <p>{{ session.tools_needed|default:"None specified" }}</p>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Fines Policy</div>
+            <p>{{ session.fines_policy|default:"Standard policy applies" }}</p>
+        </div>
+        
+        <p>Please participate actively in this community activity. Your participation helps build a better community for all.</p>
+        
+        <p>If you have any questions, please contact your local authorities or reply to this email.</p>
+    </div>
+    
+    <div class="footer">
+        <p>Thank you for your cooperation,</p>
+        <p><strong>The Umuganda Management Team</strong></p>
+        <p><a href="mailto:{{ support_email }}">{{ support_email }}</a></p>
+    </div>
+</body>
+</html>

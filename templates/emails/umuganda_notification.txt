@@ -1,0 +1,27 @@
+Dear {{ full_names }},
+
+You have an upcoming Umuganda activity scheduled:
+
+Date: {{ session.date|date:"F j, Y" }}
+Location: 
+- Sector: {{ session.sector_name }}
+- Cell: {{ session.cell_name }}
+{% if session.village_name %}- Village: {{ session.village_name }}{% endif %}
+
+Activity Details:
+{{ session.description }}
+
+Tools Needed:
+{{ session.tools_needed|default:"None specified" }}
+
+Fines Policy:
+{{ session.fines_policy|default:"Standard policy applies" }}
+
+Please participate actively in this community activity. Your participation helps build a better community for all.
+
+If you have any questions, please contact your local authorities or reply to this email.
+
+Thank you for your cooperation,
+The Umuganda Management Team
+
+{{ support_email }}

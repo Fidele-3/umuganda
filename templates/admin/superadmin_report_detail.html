@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report Detail</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4 text-primary">Report Detail</h2>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4>{{ report.report_title|default:"(No Title)" }}</h4>
+            <p><strong>Type:</strong> {{ report.report_type }}</p>
+            <p><strong>Submitted At:</strong> {{ report.submitted_at|date:"Y-m-d H:i" }}</p>
+            <p><strong>Reporter Email:</strong> 
+                    {% if report.reporter_email %}
+                        {{ report.reporter_email }}
+                    {% elif report.sender %}
+                        {{ report.sender.email }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </p>
+
+                <p><strong>Phone:</strong> 
+                    {% if report.reporter_phone_number %}
+                        {{ report.reporter_phone_number }}
+                    {% elif report.sender %}
+                        {{ report.sender.phone_number }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </p>
+
+            <p><strong>Location:</strong>
+                {{ report.incident_province.name }},
+                {{ report.incident_district.name }},
+                {{ report.incident_sector.name }},
+                {{ report.incident_cell.name }},
+                {{ report.incident_village.name }}
+            </p>
+            <p><strong>Explanation:</strong></p>
+            <p>{{ report.explanation|linebreaks }}</p>
+        </div>
+    </div>
+
+    <h5>Attached Media</h5>
+    {% if media_files %}
+        <div class="row">
+            {% for media in media_files %}
+                <div class="col-md-4 mb-3">
+                    {% if media.media_type == 'image' %}
+                        <img src="{{ media.media_file.url }}" class="img-fluid rounded border" alt="Image">
+                    {% elif media.media_type == 'video' %}
+                        <video controls class="w-100 border rounded">
+                            <source src="{{ media.media_file.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    {% elif media.media_type == 'document' %}
+                        <a href="{{ media.media_file.url }}" target="_blank" class="btn btn-outline-primary w-100">View Document</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted">No media attached to this report.</p>
+    {% endif %}
+</div>
+<hr class="my-4">
+<h4>Response Details</h4>
+
+{% if response %}
+<div class="card border-success mb-3">
+    <div class="card-body">
+        <h5 class="card-title">Response by {{ response.responder.full_names }}</h5>
+        <p><strong>Status:</strong> {{ response.status }}</p>
+        <p><strong>sector:</strong> {{ response.concerned_sector|default:"N/A" }}</p>
+        <p><strong>Message:</strong><br> {{ response.message|linebreaks }}</p>
+        <p class="text-muted"><small>Responded on: {{ response.created_at|date:"Y-m-d H:i" }}</small></p>
+    </div>
+</div>
+
+<!-- Display Response Media -->
+<h5>Response Media</h5>
+<div class="row">
+    {% for media in response_media %}
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                {% if media.media_type == 'image' %}
+                    <img src="{{ media.media_file.url }}" class="card-img-top" alt="Image">
+                {% elif media.media_type == 'video' %}
+                    <video controls class="w-100">
+                        <source src="{{ media.media_file.url }}" type="video/mp4">
+                        Your browser does not support video playback.
+                    </video>
+                {% elif media.media_type == 'document' %}
+                    <div class="card-body">
+                        <a href="{{ media.media_file.url }}" target="_blank">Download Document</a>
+                    </div>
+                {% endif %}
+                <div class="card-footer text-muted">
+                    Uploaded at: {{ media.uploaded_at|date:"Y-m-d H:i" }}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% else %}
+    <p class="text-muted">No response has been provided for this report yet.</p>
+{% endif %}
+
+</body>
+</html>

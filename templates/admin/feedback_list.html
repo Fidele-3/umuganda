@@ -1,0 +1,26 @@
+{% extends 'admin/base.html' %}
+{% block content %}
+<h2>Umuganda Feedback - {{ cell.name }}</h2>
+
+{% if feedbacks %}
+    <ul class="feedback-list">
+        {% for feedback in feedbacks %}
+            <li>
+                <strong>{{ feedback.user.get_full_name }}</strong>
+                <em>({{ feedback.feedback_type|capfirst }})</em>:
+                <p>{{ feedback.message }}</p>
+                <small>Submitted at {{ feedback.created_at }}</small>
+                {% if feedback.session %}
+                    <br><small>Session: {{ feedback.session.date }}</small>
+                {% endif %}
+                {% if feedback.fine %}
+                    <br><small>Fine ID: {{ feedback.fine.id }}</small>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No feedback available.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sector Officer Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a6bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --white: #ffffff;
+            --sidebar-width: 250px;
+            --header-height: 70px;
+            --footer-height: 60px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #2541b2);
+            color: var(--white);
+            height: var(--header-height);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+            color: var(--warning-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all var(--transition-speed) ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: var(--white);
+            transition: width var(--transition-speed) ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 70%;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: var(--header-height);
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .welcome-section p {
+            font-size: 1.1rem;
+        }
+
+        .welcome-section strong {
+            color: var(--dark-color);
+        }
+
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            transition: transform var(--transition-speed) ease;
+            border-top: 4px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-primary {
+            border-top-color: var(--primary-color);
+        }
+
+        .card-success {
+            border-top-color: var(--success-color);
+        }
+
+        .card-warning {
+            border-top-color: var(--warning-color);
+        }
+
+        .card-danger {
+            border-top-color: var(--danger-color);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+
+        .card-actions {
+            margin-top: 1rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #3a5bd9;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-light {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+        }
+
+        .btn-light:hover {
+            background-color: #e2e6ea;
+        }
+
+        /* Activity Section */
+        .activity-section {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .section-header h4 {
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: var(--white);
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .no-data {
+            padding: 2rem;
+            text-align: center;
+            color: var(--secondary-color);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .status-upcoming {
+            background-color: rgba(74, 107, 255, 0.1);
+            color: var(--primary-color);
+        }
+
+        .status-active {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-completed {
+            background-color: rgba(108, 117, 125, 0.1);
+            color: var(--secondary-color);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--dark-color), #1a1a1a);
+            color: var(--white);
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--warning-color);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 0.5rem;
+            }
+
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-section, .activity-section {
+                padding: 1.5rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            header {
+                padding: 0 1rem;
+                height: 60px;
+            }
+            
+            .logo {
+                font-size: 1.2rem;
+            }
+            
+            .nav-links a span {
+                display: none;
+            }
+            
+            .nav-links a i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-hands-helping"></i>
+            <span>Umuganda Portal</span>
+        </div>
+        <nav class="nav-links">
+            <a href="{% url 'sector_officer_dashboard' %}" class="active">
+                <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+            </a>
+            <a href="{% url 'umuganda_session_list' %}">
+                <i class="fas fa-calendar-alt"></i> <span>Activities</span>
+            </a>
+            <a href="{% url 'umuganda_fines_sector' %}">
+                <i class="fas fa-money-bill-wave"></i> <span>Fines</span>
+            </a>
+            <a href="{% url 'create_cell_officer' %}">
+                <i class="fas fa-user-plus"></i> <span>Create Admin</span>
+            </a>
+            <a href="{% url 'logout-admin' %}">
+                <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+            </a>
+        </nav>
+    </header>
+
+    <div class="main-content">
+        <div class="container">
+            <section class="welcome-section">
+                <h2><i class="fas fa-user-shield"></i> Welcome, <span class="pulse">{{ admin.full_names }}</span></h2>
+                <p>
+                    <strong>Sector Officer</strong> | 
+                    <strong>Province:</strong> {{ province.name }} | 
+                    <strong>District:</strong> {{ district.name }} | 
+                    <strong>Sector:</strong> {{ sector.name }}
+                </p>
+            </section>
+
+            <div class="dashboard-cards">
+                <div class="card card-primary">
+                    <div class="card-title"><i class="fas fa-calendar-alt"></i> Upcoming Umuganda</div>
+                    {% if display_umuganda_notice %}
+                        <div class="card-value">{{ upcoming_session.date|date:"M j, Y" }}</div>
+                        <div class="card-actions">
+                            <a href="{% url 'create_umuganda_session' %}" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Schedule New
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="card-value">None</div>
+                        <div class="card-actions">
+                            <a href="{% url 'create_umuganda_session' %}" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Schedule Session
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="card card-success">
+                    <div class="card-title"><i class="fas fa-users"></i> Cell Officers</div>
+                    <div class="card-value">{{ cell_officer_count }}</div>
+                    <div class="card-actions">
+                        <a href="{% url 'create_cell_officer' %}" class="btn btn-success">
+                            <i class="fas fa-user-plus"></i> Create New
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card card-warning">
+                    <div class="card-title"><i class="fas fa-money-bill-wave"></i> Pending Fines</div>
+                    <div class="card-value">0</div>
+                    <div class="card-actions">
+                        <a href="{% url 'umuganda_fines_sector' %}?status=pending" class="btn btn-warning">
+                            <i class="fas fa-eye"></i> View Pending
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card card-danger">
+                    <div class="card-title"><i class="fas fa-exclamation-triangle"></i> Overdue Fines</div>
+                    <div class="card-value">0</div>
+                    <div class="card-actions">
+                        <a href="{% url 'umuganda_fines_sector' %}?status=overdue" class="btn btn-danger">
+                            <i class="fas fa-eye"></i> View Overdue
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <section class="activity-section">
+                <div class="section-header">
+                    <h4><i class="fas fa-calendar-day"></i> Recent Cell Officer Updates</h4>
+                    <a href="{% url 'umuganda_session_list' %}" class="btn btn-light">
+                        <i class="fas fa-list"></i> View All
+                    </a>
+                </div>
+
+                {% if cell_updated_sessions %}
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Updated At</th>
+                                    <th>Cell</th>
+                                    <th>Updated By</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for session in cell_updated_sessions %}
+                                <tr>
+                                    <td>{{ session.date|date:"M j, Y" }}</td>
+                                    <td>{{ session.updated_at|date:"M j, Y H:i" }}</td>
+                                    <td>{{ session.cell.name }}</td>
+                                    <td>{{ session.updated_by_cell_admin.full_names }}</td>
+                                    <td>
+                                        <span class="status-badge 
+                                            {% if session.date == today %}status-active
+                                            {% elif session.date > today %}status-upcoming
+                                            {% else %}status-completed{% endif %}">
+                                            {% if session.date == today %}Active
+                                            {% elif session.date > today %}Upcoming
+                                            {% else %}Completed{% endif %}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'umuganda_session_detail' session.id %}" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="no-data">
+                        <i class="fas fa-calendar-times"></i> No recent updates from cell officers in your sector.
+                    </div>
+                {% endif %}
+            </section>
+
+            {% if cell_officers %}
+            <section class="activity-section mt-4">
+                <div class="section-header">
+                    <h4><i class="fas fa-users-cog"></i> Cell Officers in Your Sector</h4>
+                    <a href="{% url 'create_cell_officer' %}" class="btn btn-light">
+                        <i class="fas fa-user-plus"></i> Add New
+                    </a>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Cell</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% load custom_filters %}
+
+                            {% for officer in cell_officers %}
+                            <tr>
+                                <td>{{ officer.full_names }}</td>
+                                <td>{{ officer.email }}</td>
+                                <td>{{ officer.phone_number }}</td>
+                                <td>
+                                    {% with officer.id as oid %}
+                                        {% with cell_memberships|dict_get:oid as membership %}
+                                            {{ membership.cell.name }}
+                                        {% endwith %}
+                                    {% endwith %}
+                                </td>
+                                <td>
+                                    <a href="#" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            {% endif %}
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#"><i class="fas fa-lock"></i> Privacy Policy</a>
+                <a href="#"><i class="fas fa-file-alt"></i> Terms of Service</a>
+                <a href="#"><i class="fas fa-envelope"></i> Contact Us</a>
+            </div>
+            <div class="copyright">
+                &copy; {% now "Y" %} Umuganda Management System. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add interactive elements to buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('mousedown', function() {
+                    this.style.transform = 'translateY(1px)';
+                    this.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.1)';
+                });
+                
+                button.addEventListener('mouseup', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                });
+            });
+
+            // Add hover effect to cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.1)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.05)';
+                });
+            });
+
+            // Add hover effect to table rows
+            const tableRows = document.querySelectorAll('tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = '#f5f5f5';
+                });
+                
+                row.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = '';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
