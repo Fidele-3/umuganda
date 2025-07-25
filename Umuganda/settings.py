@@ -2,6 +2,7 @@ from pathlib import Path
 from datetime import timedelta
 import os
 import dj_database_url
+import ssl
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -115,6 +116,11 @@ SIMPLE_JWT = {
 # CELERY
 CELERY_BROKER_URL = "rediss://default:AdgWAAIjcDEyNDk1YzAxNzMzYWY0NTRiOTc3NTI0MzQwNWNjOGEwN3AxMA@square-grizzly-55318.upstash.io:6379"
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_BROKER_USE_SSL = {
+    "ssl_cert_reqs": ssl.CERT_NONE  
+}
+
+CELERY_RESULT_BACKEND_USE_SSL = CELERY_BROKER_USE_SSL
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TIMEZONE = "Africa/Kigali"
 CELERY_ENABLE_UTC = False
