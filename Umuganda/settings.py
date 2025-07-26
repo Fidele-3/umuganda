@@ -165,3 +165,34 @@ LOGGING = {
         "level": "DEBUG" if DEBUG else "INFO",
     },
 }
+
+import sys
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
+        },
+    },
+
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',  # Show everything
+    },
+
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',  # Change to INFO or WARNING in production
+            'propagate': True,
+        },
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',  # SQL queries will be shown
+        },
+    },
+}
