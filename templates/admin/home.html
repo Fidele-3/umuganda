@@ -99,14 +99,43 @@
             margin-top: 1rem;
         }
 
+        .download-btn {
+            display: inline-block;
+            background-color: var(--success-color);
+            color: var(--white);
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+            margin: 1rem;
+        }
+
         .login-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(74, 107, 255, 0.4);
             background-color: #3a5bd9;
         }
 
-        .login-btn i {
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
+            background-color: #218838;
+        }
+
+        .login-btn i, .download-btn i {
             margin-left: 8px;
+        }
+
+        .app-notice {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            text-align: center;
+            max-width: 800px;
         }
 
         footer {
@@ -183,7 +212,16 @@
             <h2>About Umuganda</h2>
             <p>Umuganda is a traditional community work practice in Rwanda where citizens come together to contribute to the development of their communities. This monthly activity helps maintain public infrastructure, protect the environment, and strengthen social cohesion.</p>
             <p>Participation in Umuganda is mandatory for all able-bodied citizens aged 18 to 65. The program has played a significant role in Rwanda's post-genocide reconstruction and continues to be a cornerstone of community development.</p>
-            <p>Through this portal, community administrators can manage Umuganda sessions, track participation, and ensure the smooth operation of this important national program.</p>
+            
+            <div class="app-notice">
+                <h3>Important Notice for Community Members</h3>
+                <p>All community members must download and use the myUmuganda app to participate in Umuganda activities. The login button below is <strong>only for administrators</strong>.</p>
+                <p><strong>Note:</strong> The myUmuganda app is currently available only for Android devices. iOS version will be available soon.</p>
+            </div>
+            
+            <a href="https://www.mediafire.com/file/iocxm8nxi3q2y28/app-release.apk/file" class="download-btn">
+                Download myUmuganda App <i class="fas fa-download"></i>
+            </a>
         </div>
         
         <a href="{% url 'admin_login' %}" class="login-btn">
@@ -196,6 +234,7 @@
             <div class="footer-links">
                 <a href="#">Privacy Policy</a>
                 <a href="#">Terms of Service</a>
+                <a href="https://www.mediafire.com/file/iocxm8nxi3q2y28/app-release.apk/file">Download App</a>
                 <a href="#">Contact Support</a>
             </div>
             <div class="copyright">
@@ -205,13 +244,15 @@
     </footer>
 
     <script>
-        // Simple animation for the login button on hover
-        document.querySelector('.login-btn').addEventListener('mouseenter', function() {
-            this.querySelector('i').style.transform = 'translateX(5px)';
-        });
-        
-        document.querySelector('.login-btn').addEventListener('mouseleave', function() {
-            this.querySelector('i').style.transform = 'translateX(0)';
+        // Simple animation for the buttons on hover
+        document.querySelectorAll('.login-btn, .download-btn').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                this.querySelector('i').style.transform = 'translateX(5px)';
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                this.querySelector('i').style.transform = 'translateX(0)';
+            });
         });
     </script>
 </body>
