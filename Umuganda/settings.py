@@ -3,7 +3,8 @@ from datetime import timedelta
 import os
 import dj_database_url
 import ssl
-
+from dotenv import load_dotenv
+load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
@@ -12,15 +13,13 @@ DEBUG = os.environ.get("DEBUG", "False") == "True"
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
 # DATABASE
+
+import os
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'umuganda',
-        'USER': 'umuganda_user',
-        'PASSWORD': 'liTxrFhyok4vD7UVIqooA2Vja3wBS57Y',
-        'HOST': 'dpg-d21rrrumcj7s73et6vk0-a.oregon-postgres.render.com',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL')
+    )
 }
 
 
@@ -114,11 +113,10 @@ SIMPLE_JWT = {
 }
 
 # CELERY
-CELERY_BROKER_URL = "rediss://default:AdgWAAIjcDEyNDk1YzAxNzMzYWY0NTRiOTc3NTI0MzQwNWNjOGEwN3AxMA@square-grizzly-55318.upstash.io:6379?ssl_cert_reqs=CERT_NONE"
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
 
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 
-CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_BROKER_USE_SSL = {
     "ssl_cert_reqs": ssl.CERT_NONE  
 }
@@ -128,11 +126,15 @@ CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TIMEZONE = "Africa/Kigali"
 CELERY_ENABLE_UTC = False
 
-# EMAIL (console for dev, set SMTP in production)
-DEFAULT_FROM_EMAIL = "no-reply@umuganda.com"
-EMAIL_BACKEND = os.environ.get(
-    "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
-)
+# settings.py
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS') == 'True'
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER)
+
 
 # CORS
 CORS_ALLOW_ALL_ORIGINS = os.environ.get("CORS_ALLOW_ALL_ORIGINS", "False") == "True"
