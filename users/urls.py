@@ -33,7 +33,7 @@ from umuganda.views.views.umuganda_session_list import UmugandaSessionListView
 from umuganda.views.views.umuganda_fines_list import UmugandaFinesListView
 from umuganda.views.views.feedback_views import UmugandaFeedbackListView
 from users.views.api_views.dashbord import CitizenDashboardView
-from users.views.api_views.session_view import UmugandaSessionDetailView
+from users.views.api_views.session_view import UmugandaSessionDetailViews
 from users.views.api_views.fine_claim import ClaimFineAPIView
 from users.views.api_views.fine_view import ListApplicableFinesAPIView
 from users.views.views.sector_fines_overview import SectorFinesOverviewView
@@ -79,7 +79,7 @@ urlpatterns = [
     path('umuganda/fines/<uuid:session_id>/', UmugandaFinesListView.as_view(), name='umuganda_fines_list'),
     path('umuganda/feedback/', UmugandaFeedbackListView.as_view(), name='umuganda_feedback_list'),
     path('citizen/dashboard/', CitizenDashboardView.as_view(), name='citizen_dashboard'),
-    path('umuganda/session/<uuid:id>/detail/', UmugandaSessionDetailView.as_view(), name='umuganda_citizen_session_detail'),
+    path('umuganda/session/<uuid:id>/detail/', UmugandaSessionDetailViews.as_view(), name='umuganda_citizen_session_detail'),
     path('umuganda/fines/claim/<uuid:fine_id>/claim', ClaimFineAPIView.as_view(), name='claim_fine'),
     path('umuganda/fines/list/', ListApplicableFinesAPIView.as_view(), name='list_applicable_fines'),
     path('sector/fines/overview/', SectorFinesOverviewView.as_view(), name='umuganda_fines_sector'),
