@@ -153,19 +153,6 @@ USE_I18N = True
 USE_TZ = True
 LANGUAGE_CODE = "en-us"
 
-# LOGGING
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "console": {"class": "logging.StreamHandler"},
-    },
-    "root": {
-        "handlers": ["console"],
-        "level": "DEBUG" if DEBUG else "INFO",
-    },
-}
-
 import sys
 
 LOGGING = {
