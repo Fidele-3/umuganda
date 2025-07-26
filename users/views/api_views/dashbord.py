@@ -58,7 +58,7 @@ class CitizenDashboardView(APIView):
             date__gte=today,
             sector=profile.sector,
             cell=profile.cell,
-            village=profile.village,
+            
         ).order_by('date')
 
         logger.info(f"Found {sessions.count()} Umuganda sessions for user location")
