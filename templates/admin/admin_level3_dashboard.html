@@ -325,6 +325,59 @@
             color: #0c5460;
         }
 
+        /* Recent Sessions */
+        .sessions-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background-color: var(--white);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .sessions-table th, .sessions-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .sessions-table th {
+            background-color: var(--primary-color);
+            color: var(--white);
+            font-weight: 500;
+        }
+
+        .sessions-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .sessions-table tr:hover {
+            background-color: rgba(74, 107, 255, 0.05);
+        }
+
+        .badge {
+            padding: 0.5rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .badge-primary {
+            background-color: rgba(74, 107, 255, 0.1);
+            color: var(--primary-color);
+        }
+
+        .badge-success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+        }
+
+        .badge-secondary {
+            background-color: rgba(108, 117, 125, 0.1);
+            color: var(--secondary-color);
+        }
+
         /* Footer */
         footer {
             background: linear-gradient(135deg, var(--dark-color), #1a1a1a);
@@ -408,6 +461,11 @@
                 flex-direction: column;
                 gap: 1rem;
             }
+
+            .sessions-table {
+                display: block;
+                overflow-x: auto;
+            }
         }
 
         @media (max-width: 576px) {
@@ -445,7 +503,7 @@
                 <i class="fas fa-calendar-alt"></i> <span>Activities</span>
             </a>
 
-            {% if umuganda_session.id %}
+            {% if umuganda_session and umuganda_session.id %}
                 <a href="{% url 'umuganda_fines_list' session_id=umuganda_session.id %}">
                     <i class="fas fa-money-bill-wave"></i> <span>Fines</span>
                 </a>
@@ -467,9 +525,7 @@
             <a href="{% url 'logout-admin' %}">
                 <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
             </a>
-
         </nav>
-
     </header>
 
     <div class="main-content">
@@ -478,7 +534,7 @@
             <div class="user-info-card">
                 <div class="user-info-item">
                     <h4>Officer Name</h4>
-                    <p>{{ request.user.get_full_name }}</p>
+                    <p>{{ admin.get_full_name }}</p>
                 </div>
                 <div class="user-info-item">
                     <h4>Cell</h4>
@@ -491,13 +547,20 @@
             </div>
 
             <!-- Notification -->
-            {% if umuganda_session and umuganda_session.date >= today %}
+            {% if needs_attention %}
                 <div class="notification notification-warning">
                     <i class="fas fa-exclamation-circle fa-2x"></i>
                     <div>
-                        <h4>Upcoming Umuganda Activity. PLEASE BEFORE REVIEW, YOU ARE RECOMMENDED FIRST TO EDIT UMUGANDA ACTIVITY VIA NAV BAR. 
-                            OTHERWISE. EACH BUTTON YOU CLICK WILL HAVE ERRORS BECOUSE YOU DIDN'T ADD ALL REQUIRED INFO ABOUT UMUGANDA ACTIVITY</h4>
-                        <p>Next session scheduled for {{ umuganda_session.date|date:"F j, Y" }} (in {{ umuganda_session.date|timeuntil }})</p>
+                        <h4>Attention Required</h4>
+                        <p>There are sector-level Umuganda sessions that need your cell's participation. Please create corresponding cell-level sessions.</p>
+                    </div>
+                </div>
+            {% elif umuganda_session and umuganda_session.sector_session.date >= today %}
+                <div class="notification notification-info">
+                    <i class="fas fa-info-circle fa-2x"></i>
+                    <div>
+                        <h4>Upcoming Umuganda Activity</h4>
+                        <p>Next session scheduled for {{ umuganda_session.sector_session.date|date:"F j, Y" }} (in {{ umuganda_session.sector_session.date|timeuntil }})</p>
                     </div>
                 </div>
             {% else %}
@@ -518,13 +581,13 @@
             {% if umuganda_session %}
             <div class="umuganda-card">
                 <div class="umuganda-card-header">
-                    <h3><i class="fas fa-calendar-day"></i> {{ umuganda_session.date|date:"F j, Y" }}</h3>
+                    <h3><i class="fas fa-calendar-day"></i> {{ umuganda_session.sector_session.date|date:"F j, Y" }}</h3>
                     <span class="umuganda-status 
-                        {% if umuganda_session.date == today %}status-active
-                        {% elif umuganda_session.date > today %}status-upcoming
+                        {% if umuganda_session.sector_session.date == today %}status-active
+                        {% elif umuganda_session.sector_session.date > today %}status-upcoming
                         {% else %}status-completed{% endif %}">
-                        {% if umuganda_session.date == today %}Active
-                        {% elif umuganda_session.date > today %}Upcoming
+                        {% if umuganda_session.sector_session.date == today %}Active
+                        {% elif umuganda_session.sector_session.date > today %}Upcoming
                         {% else %}Completed{% endif %}
                     </span>
                 </div>
@@ -540,35 +603,19 @@
                     </div>
                     <div class="detail-item">
                         <h4><i class="fas fa-tools"></i> Required Tools</h4>
-                        {% if umuganda_session.tools_needed.all %}
-                            <div class="tools-list">
-                                {% for tools_needed in umuganda_session.tools_needed.all %}
-                                    <span class="tool-badge"><i class="fas fa-{{ tools_needed.icon }}"></i> {{ tools_needed.name }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <p>No specific tools required</p>
-                        {% endif %}
+                        <p>{{ umuganda_session.tools_needed|default:"No specific tools required" }}</p>
                     </div>
                     <div class="detail-item">
                         <h4><i class="fas fa-info-circle"></i> Description</h4>
                         <p>{{ umuganda_session.description|default:"No description provided" }}</p>
                     </div>
-                    <div class="detail-item">
-                        <h4><i class="fas fa-file-alt"></i> Fines Policy</h4>
-                        <p>{{ umuganda_session.fines_policy|default:"1000" }}</p>
-                    </div>
-                    <div class="detail-item">
-                        <h4><i class="fas fa-users"></i> Expected Participants</h4>
-                        <p>{{ umuganda_session.expected_participants|default:"All residents" }}</p>
-                    </div>
                 </div>
 
                 <div class="action-buttons">
-                    <a href="{% url 'umuganda_session_detail' umuganda_session.id %}" class="btn btn-primary">
-                        <i class="fas fa-eye"></i> View Details
-                    </a>
                     {% if umuganda_session.date >= today %}
+                        <a href="{% url 'create_umuganda_session_view' %}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Edit Session
+                        </a>
                         <a href="{% url 'umuganda_participants_list' umuganda_session.id %}" class="btn btn-success">
                             <i class="fas fa-users"></i> Manage Participants
                         </a>
@@ -578,6 +625,64 @@
             {% else %}
                 <div class="alert alert-info">
                     <i class="fas fa-info-circle"></i> No Umuganda activity currently assigned to your cell.
+                </div>
+            {% endif %}
+
+            <!-- Recent Sessions Section -->
+            <div class="page-header">
+                <h2><i class="fas fa-history"></i> Recent Sessions</h2>
+                <div class="scope-selector" style="margin-top: 1rem;">
+                    <a href="?scope=all" class="btn btn-sm {% if scope == 'all' %}btn-primary{% else %}btn-outline-primary{% endif %}">All</a>
+                    <a href="?scope=today" class="btn btn-sm {% if scope == 'today' %}btn-primary{% else %}btn-outline-primary{% endif %}">Today</a>
+                    <a href="?scope=week" class="btn btn-sm {% if scope == 'week' %}btn-primary{% else %}btn-outline-primary{% endif %}">This Week</a>
+                </div>
+            </div>
+
+            {% if sessions %}
+            <div class="umuganda-card">
+                <table class="sessions-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Location</th>
+                            <th>Participants</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for session in sessions %}
+                        <tr>
+                            <td>{{ session.sector_session.date|date:"M j, Y" }}</td>
+                            <td>{{ session.village|default:"Not specified" }}</td>
+                            <td>
+                                <a href="{% url 'umuganda_participants_list' session.id %}" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-users-cog"></i> Manage
+                                </a>
+                            </td>
+                            <td>
+                                <span class="badge 
+                                    {% if session.sector_session.date == today %}badge-success
+                                    {% elif session.sector_session.date > today %}badge-primary
+                                    {% else %}badge-secondary{% endif %}">
+                                    {% if session.sector_session.date == today %}Active
+                                    {% elif session.sector_session.date > today %}Upcoming
+                                    {% else %}Completed{% endif %}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'umuganda_session_detail' session.id %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No sessions found for the selected scope.
                 </div>
             {% endif %}
         </div>

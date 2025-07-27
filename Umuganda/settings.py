@@ -10,7 +10,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "fallback-secret")  # Must be set in Render
 DEBUG = os.environ.get("DEBUG", "False") == "True"
+
+
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
+
+#ALLOWED_HOSTS = ['http://10.0.2.2', '10.0.2.2', '127.0.0.1']
 
 # DATABASE
 
@@ -21,9 +25,20 @@ DATABASES = {
         default=os.getenv('DATABASE_URL')
     )
 }
+"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'umuganda',
+        'USER': 'umuganda_user',
+        'PASSWORD': '11223344',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    }
+}
+"""
 
 
-# PUBLIC API URL (used in verification/reset/email links)
 PUBLIC_API_URL = os.environ.get("PUBLIC_API_URL", "http://localhost:8000")
 
 # APPLICATIONS
@@ -63,14 +78,14 @@ MIDDLEWARE = [
 ROOT_URLCONF = "Umuganda.urls"
 WSGI_APPLICATION = "Umuganda.wsgi.application"
 
-# CUSTOM USER MODEL & AUTH BACKEND
+
 AUTH_USER_MODEL = "users.CustomUser"
 AUTHENTICATION_BACKENDS = [
     "users.auth_backend.EmailBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
 
-# TEMPLATES
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -166,20 +181,27 @@ LOGGING = {
         },
     },
 
+
+    "users.views.api_views.dashbord": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
+
     'root': {
         'handlers': ['console'],
-        'level': 'DEBUG',  # Show everything
+       'level': 'DEBUG',  # Show everything
     },
 
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': 'DEBUG',  # Change to INFO or WARNING in production
+            'level': 'INFO',  # Change to INFO or WARNING in production
             'propagate': True,
         },
         'django.db.backends': {
             'handlers': ['console'],
-            'level': 'DEBUG',  # SQL queries will be shown
+            'level': 'DEBUG',  
         },
     },
 }

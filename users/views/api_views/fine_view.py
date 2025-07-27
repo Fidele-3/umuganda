@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from django.db.models import Q
 from datetime import datetime, timezone as Time
 
-from umuganda.models import Fine, Attendance, UmugandaSession
+from umuganda.models import Fine, Attendance, CellUmugandaSession
 from users.serializer.fine_serializer import FineSerializer
 
 logger = logging.getLogger(__name__)
@@ -34,13 +34,16 @@ class ListApplicableFinesAPIView(APIView):
             return Response({"detail": "User cell or sector not set in profile."}, status=400)
 
         try:
-            # Filter sessions and fines with correct cell and sector
-            all_sessions = UmugandaSession.objects.filter(cell=user_cell, cell__sector=user_sector)
+            # Query CellUmugandaSessions filtered by user's cell and sector (via sector_session)
+            all_sessions = CellUmugandaSession.objects.filter(
+                cell=user_cell,
+                sector_session__sector=user_sector
+            )
 
+            # Existing fines for user linked to CellUmugandaSession as session
             existing_fines = Fine.objects.filter(
                 user=user,
-                session__cell=user_cell,
-                session__cell__sector=user_sector
+                session__in=all_sessions
             ).exclude(
                 Q(status='paid', paid_at__isnull=False, payment_id__isnull=False) |
                 Q(claim=True, claim_has_been_approved=True)
@@ -52,7 +55,7 @@ class ListApplicableFinesAPIView(APIView):
 
         applicable_fines = []
 
-        # Add/Update real existing fines
+        # Update existing fines' overdue months and amount if needed
         for fine in existing_fines:
             logger.debug(f"Processing existing fine ID: {fine.id}")
             try:
@@ -100,15 +103,12 @@ class ListApplicableFinesAPIView(APIView):
                 logger.debug(f"Skipping session {session.id} because fines_policy is not set or zero.")
                 continue
 
-            if session.date > now.date():
-                logger.debug(f"Skipping session {session.id} because session date {session.date} is in the future.")
+            if session.sector_session.date > now.date():
+                logger.debug(f"Skipping session {session.id} because session date {session.sector_session.date} is in the future.")
                 continue
 
-    
-
-
             try:
-                session_date = session.date
+                session_date = session.sector_session.date
                 if not isinstance(session_date, datetime):
                     session_date = datetime.combine(session_date, datetime.min.time(), tzinfo=Time.utc)
 

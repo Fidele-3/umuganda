@@ -262,6 +262,49 @@
             gap: 1rem;
         }
 
+        /* Cell Sessions Table */
+        .cell-sessions {
+            margin-top: 2rem;
+        }
+
+        .cell-sessions h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+            background-color: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .table th {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table tr:hover {
+            background-color: rgba(74, 107, 255, 0.05);
+        }
+
         /* Footer */
         footer {
             background: linear-gradient(135deg, var(--dark-color), #1a1a1a);
@@ -401,16 +444,6 @@
                 </span>
             </div>
 
-            {% if can_edit and days_remaining <= 2 %}
-                <div class="edit-disabled">
-                    <i class="fas fa-exclamation-triangle fa-2x"></i>
-                    <div>
-                        <h4>Editing Disabled</h4>
-                        <p>Session details can only be edited when there are more than 2 days remaining. Current days remaining: {{ days_remaining }}</p>
-                    </div>
-                </div>
-            {% endif %}
-
             <div class="session-card">
                 <div class="session-details">
                     <div class="detail-item">
@@ -420,8 +453,8 @@
                     <div class="detail-item">
                         <h4><i class="fas fa-home"></i> Cell</h4>
                         <p>
-                            {% if session.cell %}
-                                {{ session.cell.name }}
+                            {% if cell_session.cell %}
+                                {{ cell_session.cell.name }}
                             {% else %}
                                 Not Assigned
                             {% endif %}
@@ -430,8 +463,8 @@
                     <div class="detail-item">
                         <h4><i class="fas fa-map-marked-alt"></i> Village</h4>
                         <p>
-                            {% if session.village %}
-                                {{ session.village.name }}
+                            {% if cell_session.village %}
+                                {{ cell_session.village.name }}
                             {% else %}
                                 Not Assigned
                             {% endif %}
@@ -443,7 +476,7 @@
                     </div>
                     <div class="detail-item">
                         <h4><i class="fas fa-calendar-check"></i> Updated At</h4>
-                        <p>{{ session.updated_at }}</p>
+                        <p>{{ cell_session.updated_at }}</p>
                     </div>
                     <div class="detail-item">
                         <h4><i class="fas fa-user-tie"></i> Set By Sector Officer</h4>
@@ -456,10 +489,10 @@
                         </p>
                     </div>
                     <div class="detail-item">
-                        <h4><i class="fas fa-user-edit"></i> Updated By Cell Officer</h4>
+                        <h4><i class="fas fa-user-edit"></i> Updated By</h4>
                         <p>
-                            {% if session.updated_by_cell_admin %}
-                                {{ session.updated_by_cell_admin.get_full_name }}
+                            {% if cell_session.updated_by %}
+                                {{ cell_session.updated_by.get_full_name }}
                             {% else %}
                                 Not Yet Updated
                             {% endif %}
@@ -469,7 +502,22 @@
 
                 <hr>
 
-                {% if can_edit and days_remaining > 2 %}
+                <div class="session-details">
+                    <div class="detail-item">
+                        <h4><i class="fas fa-align-left"></i> Description</h4>
+                        <p>{{ cell_session.description|default:"Not provided" }}</p>
+                    </div>
+                    <div class="detail-item">
+                        <h4><i class="fas fa-tools"></i> Tools Needed</h4>
+                        <p>{{ cell_session.tools_needed|default:"Not specified" }}</p>
+                    </div>
+                    <div class="detail-item">
+                        <h4><i class="fas fa-money-bill-wave"></i> Fines Policy</h4>
+                        <p>{{ cell_session.fines_policy|default:"Not specified" }}</p>
+                    </div>
+                </div>
+
+                {% if can_edit %}
                     <form method="post">
                         {% csrf_token %}
                         
@@ -503,33 +551,48 @@
                         </div>
                     </form>
                 {% else %}
-                    <div class="session-details">
-                        <div class="detail-item">
-                            <h4><i class="fas fa-align-left"></i> Description</h4>
-                            <p>{{ session.description|default:"Not provided" }}</p>
-                        </div>
-                        <div class="detail-item">
-                            <h4><i class="fas fa-tools"></i> Tools Needed</h4>
-                            <p>{{ session.tools_needed|default:"Not specified" }}</p>
-                        </div>
-                        <div class="detail-item">
-                            <h4><i class="fas fa-money-bill-wave"></i> Fines Policy</h4>
-                            <p>{{ session.fines_policy|default:"Not specified" }}</p>
-                        </div>
-                    </div>
-
                     <div class="action-buttons">
-                        {% if can_edit and days_remaining > 2 %}
-                            <a href="?edit=true" class="btn btn-primary">
-                                <i class="fas fa-edit"></i> Edit Session
-                            </a>
-                        {% endif %}
                         <a href="{% url 'umuganda_session_list' %}" class="btn btn-secondary">
                             <i class="fas fa-arrow-left"></i> Back to Sessions
                         </a>
                     </div>
                 {% endif %}
             </div>
+
+            {% if cell_sessions %}
+                <div class="session-card cell-sessions">
+                    <h3><i class="fas fa-list"></i> Related Cell Sessions</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Cell</th>
+                                <th>Village</th>
+                                <th>Status</th>
+                                <th>Participants</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cell_session in cell_sessions %}
+                                <tr>
+                                    <td>{{ cell_session.cell.name }}</td>
+                                    <td>{{ cell_session.village.name|default:"Not specified" }}</td>
+                                    <td>
+                                        <span class="session-status 
+                                            {% if session.date == today %}status-active
+                                            {% elif session.date > today %}status-upcoming
+                                            {% else %}status-completed{% endif %}">
+                                            {% if session.date == today %}Active
+                                            {% elif session.date > today %}Upcoming
+                                            {% else %}Completed{% endif %}
+                                        </span>
+                                    </td>
+                                    <td>{{ cell_session.participants.count }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
         </div>
     </div>
 
@@ -569,13 +632,31 @@
                 });
             });
 
-            const form = document.querySelector('form');
-            if (form && {{ days_remaining }} <= 2) {
-                form.querySelectorAll('input, textarea, select').forEach(element => {
-                    element.disabled = true;
-                });
-                form.querySelector('button[type="submit"]').disabled = true;
-            }
+            // Display Django messages as toast notifications
+            {% if messages %}
+                {% for message in messages %}
+                    const toast = document.createElement('div');
+                    toast.className = `toast-message ${message.tags}`;
+                    toast.innerHTML = `
+                        <div class="toast-content">
+                            <i class="fas ${message.tags == 'success' ? 'fa-check-circle' : message.tags == 'error' ? 'fa-times-circle' : 'fa-info-circle'}"></i>
+                            <span>${message}</span>
+                        </div>
+                    `;
+                    document.body.appendChild(toast);
+                    
+                    setTimeout(() => {
+                        toast.classList.add('show');
+                    }, 100);
+                    
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                        setTimeout(() => {
+                            toast.remove();
+                        }, 300);
+                    }, 5000);
+                {% endfor %}
+            {% endif %}
         });
     </script>
 </body>

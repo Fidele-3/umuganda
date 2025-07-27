@@ -83,7 +83,7 @@ urlpatterns = [
     path('umuganda/fines/claim/<uuid:fine_id>/claim', ClaimFineAPIView.as_view(), name='claim_fine'),
     path('umuganda/fines/list/', ListApplicableFinesAPIView.as_view(), name='list_applicable_fines'),
     path('sector/fines/overview/', SectorFinesOverviewView.as_view(), name='umuganda_fines_sector'),
-    path('umuganda/sessions/<uuid:session_id>/detail/', umuganda_session_detail, name='umuganda_session_detail'),
+    path('umuganda/sessions/<uuid:session_id>/detail/', umuganda_session_detail, name='umuganda_session_details'),
 
 
 

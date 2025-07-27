@@ -3,14 +3,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.utils.timezone import now
+
 from users.serializer.dashbord_serializer import (
     CustomUserSerializer,
     UserProfileSerializer,
-    UmugandaSessionSerializer,
+    CellUmugandaSessionSerializer,
     AttendanceSerializer,
     FineSerializer
 )
-from umuganda.models import UmugandaSession, Attendance, Fine
+
+from umuganda.models import CellUmugandaSession, Attendance, Fine
 
 logger = logging.getLogger(__name__)
 
@@ -19,74 +21,67 @@ class CitizenDashboardView(APIView):
 
     def get(self, request):
         user = request.user
-        logger.info(f"Received dashboard request for user: {user} (ID: {user.id})")
-        print(f"[DEBUG] User: {user} | ID: {user.id}")
+        logger.info(f"Dashboard request started for user ID: {user.id}")
+        print(f"[LOG] Starting dashboard request for user ID: {user.id}")
 
-        # Profile Info
-        user_data = CustomUserSerializer(user).data
-        logger.debug(f"User serialized data: {user_data}")
-        print(f"[DEBUG] User Data Serialized")
+        # Check for profile existence
+        if not hasattr(user, 'profile') or user.profile is None:
+            logger.warning(f"User {user.id} missing profile.")
+            print(f"[WARN] User {user.id} missing profile.")
+            return Response({"error": "User profile is missing."}, status=400)
 
-        profile_data = {}
-        if hasattr(user, 'profile'):
-            profile_data = UserProfileSerializer(user.profile).data
-            logger.debug(f"Profile data: {profile_data}")
-            print(f"[DEBUG] Profile exists for user: {user.profile}")
-        else:
-            logger.warning(f"No profile found for user ID {user.id}")
-            print(f"[WARNING] No profile found")
+        profile = user.profile
+        logger.debug(f"User profile loaded: {profile}")
+        print(f"[LOG] User profile found: Sector={getattr(profile.sector, 'id', None)}, Cell={getattr(profile.cell, 'id', None)}, Village={getattr(profile.village, 'id', None)}")
 
-        # Check for required location fields
-        profile = getattr(user, 'profile', None)
-        if not profile:
-            logger.error("Profile is missing for the user.")
-            return Response({"error": "Profile missing"}, status=400)
+        # Serialize user and profile info
+        user_data = CustomUserSerializer(user).data or {}
+        logger.debug(f"User serialized data keys: {list(user_data.keys())}")
+        profile_data = UserProfileSerializer(profile).data or {}
+        logger.debug(f"Profile serialized data keys: {list(profile_data.keys())}")
+        print(f"[LOG] Serialized user and profile data.")
 
-        if not all([profile.sector, profile.cell, profile.village]):
-            logger.warning(f"Incomplete location in profile: Sector={profile.sector}, Cell={profile.cell}, Village={profile.village}")
-            print(f"[WARNING] Missing location info")
-        else:
-            logger.info(f"Filtering sessions by: Sector={profile.sector}, Cell={profile.cell}, Village={profile.village}")
-            print(f"[DEBUG] Filtering by sector={profile.sector.id}, cell={profile.cell.id}, village={profile.village.id}")
-
-        # Available sessions
+        # Fetch upcoming sessions
         today = now().date()
-        logger.debug(f"Today’s date: {today}")
-        print(f"[DEBUG] Today: {today}")
+        sessions_qs = CellUmugandaSession.objects.filter(
+            cell_id=profile.cell_id,
+            sector_session__date__gte=today
+        ).order_by('sector_session__date')
+        logger.info(f"Found {sessions_qs.count()} upcoming sessions for cell {profile.cell_id}")
+        print(f"[LOG] Upcoming sessions count: {sessions_qs.count()}")
 
-        sessions = UmugandaSession.objects.filter(
-            date__gte=today,
-            sector=profile.sector,
-            cell=profile.cell,
-            
-        ).order_by('date')
+        sessions = CellUmugandaSessionSerializer(sessions_qs, many=True).data or []
+        logger.debug(f"Serialized {len(sessions)} sessions")
 
-        logger.info(f"Found {sessions.count()} Umuganda sessions for user location")
-        print(f"[DEBUG] Sessions found: {sessions.count()}")
+        # Fetch past attendance
+        attendances_qs = Attendance.objects.filter(user=user).order_by('-recorded_at')
+        logger.info(f"Found {attendances_qs.count()} attendance records for user {user.id}")
+        print(f"[LOG] Attendance records count: {attendances_qs.count()}")
 
-        for s in sessions:
-            logger.debug(f"Session ID: {s.id} | Date: {s.date} | Sector: {s.sector} | Cell: {s.cell} | Village: {s.village}")
-            print(f"[DEBUG] Session: {s.id} - {s.date}")
+        attendances = AttendanceSerializer(attendances_qs, many=True).data or []
+        logger.debug(f"Serialized {len(attendances)} attendance records")
 
-        sessions_data = UmugandaSessionSerializer(sessions, many=True).data
+        # Fetch fines
+        fines_qs = Fine.objects.filter(user=user).order_by('-issued_at')
+        logger.info(f"Found {fines_qs.count()} fines for user {user.id}")
+        print(f"[LOG] Fines count: {fines_qs.count()}")
 
-        # Attendance records
-        attendances = Attendance.objects.filter(user=user)
-        logger.info(f"Found {attendances.count()} attendance records for user ID {user.id}")
-        attendances_data = AttendanceSerializer(attendances, many=True).data
+        fines = FineSerializer(fines_qs, many=True).data or []
+        logger.debug(f"Serialized {len(fines)} fines")
 
-        # Fines
-        fines = Fine.objects.filter(user=user)
-        logger.info(f"Found {fines.count()} fine records for user ID {user.id}")
-        fines_data = FineSerializer(fines, many=True).data
+        # Prepare response
+        response = {
+            "user": {
+                **user_data,
+                "profile": profile_data,
+            },
+            "available_sessions": sessions,        # renamed from upcoming_sessions
+            "attendance_history": attendances,
+            "fines": fines,
+        }
 
-        logger.info("Dashboard data successfully generated")
-        print(f"[DEBUG] Dashboard data ready")
 
-        return Response({
-            "user": user_data,
-            "profile": profile_data,
-            "available_sessions": sessions_data,
-            "attendance_history": attendances_data,
-            "fines": fines_data,
-        })
+        logger.info(f"Dashboard data prepared and sent for user ID: {user.id}")
+        print(f"[LOG] Dashboard response ready for user ID: {user.id}")
+
+        return Response(response)

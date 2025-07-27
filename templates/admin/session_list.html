@@ -448,8 +448,8 @@
             <div class="page-header">
                 <h2><i class="fas fa-calendar-alt"></i> Umuganda Sessions for {{ working_cell.name }}</h2>
                 <div class="action-buttons">
-                    <a href="{% url 'umuganda_session_create' %}" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Create New Session
+                    <a href="{% url 'create_umuganda_session_view' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create New Sessionbut only if sector officer has set the date
                     </a>
                 </div>
             </div>
@@ -512,6 +512,7 @@
                                             {% if session.date == today %}Active
                                             {% elif session.date > today %}Upcoming
                                             {% else %}Completed{% endif %}
+                                            
                                         </span>
                                     </td>
                                     <td>{{ session.location|default:"Not specified" }}</td>

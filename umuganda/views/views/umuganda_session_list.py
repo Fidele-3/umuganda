@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
-from umuganda.models import UmugandaSession
+from umuganda.models import UmugandaSession, CellUmugandaSession
 from admn.models.cell_admin_membership import CellAdminMembership
 from admn.models.sector_membership import sectorAdminMembership  
 
@@ -18,7 +18,7 @@ class UmugandaSessionListView(View):
         working_cell = None
         working_sector = None
 
-        # ✅ If user is sector officer
+        # ✅ Sector Officer
         if user.user_level == 'sector_officer':
             sector_membership_qs = sectorAdminMembership.objects.filter(admin=user, is_active=True)
             if not sector_membership_qs.exists():
@@ -26,10 +26,10 @@ class UmugandaSessionListView(View):
 
             working_sector = sector_membership_qs.first().sector
 
-            # ✅ Fetch all sessions under the sector (by matching cell.sector)
-            sessions = UmugandaSession.objects.filter(cell__sector=working_sector).order_by('-date')
+            # ✅ All sessions for this sector
+            sessions = UmugandaSession.objects.filter(sector=working_sector).order_by('-date')
 
-        # ✅ If user is cell officer
+        # ✅ Cell Officer
         elif user.user_level == 'cell_officer':
             cell_membership_qs = CellAdminMembership.objects.filter(admin=user, is_active=True)
             if not cell_membership_qs.exists():
@@ -37,14 +37,15 @@ class UmugandaSessionListView(View):
 
             working_cell = cell_membership_qs.first().cell
 
-            # ✅ Fetch sessions by cell
-            sessions = UmugandaSession.objects.filter(cell=working_cell).order_by('-date')
+            # ✅ Filter UmugandaSession where this cell has a CellUmugandaSession entry
+            cell_sessions = CellUmugandaSession.objects.filter(cell=working_cell).select_related('sector_session')
+            sessions = [cs.sector_session for cs in cell_sessions]
+            sessions = sorted(sessions, key=lambda s: s.date, reverse=True)
 
-        # ❌ If user level is not recognized
+        # ❌ Unknown user level
         else:
             return render(request, 'cell_not_assigned.html', status=403)
 
-        # ✅ Render template with context
         return render(request, self.template_name, {
             'sessions': sessions,
             'working_cell': working_cell,

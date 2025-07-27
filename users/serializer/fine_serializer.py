@@ -1,11 +1,11 @@
 from rest_framework import serializers
 from umuganda.models import Fine
 from umuganda.models.umugandasession import UmugandaSession
-from users.serializer.dashbord_serializer import CustomUserSerializer, UmugandaSessionSerializer
+from users.serializer.dashbord_serializer import CustomUserSerializer, CellUmugandaSessionSerializer
 
 class FineSerializer(serializers.ModelSerializer):
     user = CustomUserSerializer(read_only=True)
-    session = UmugandaSessionSerializer(read_only=True)
+    session = CellUmugandaSessionSerializer(read_only=True)
 
     class Meta:
         model = Fine

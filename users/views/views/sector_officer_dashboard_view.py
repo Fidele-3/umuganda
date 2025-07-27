@@ -6,7 +6,7 @@ from django.utils.timezone import now
 from users.models import CustomUser
 from users.models.addresses import Cell
 from admn.models.cell_admin_membership import CellAdminMembership
-from umuganda.models import UmugandaSession
+from umuganda.models import UmugandaSession, CellUmugandaSession
 from admn.models import sectorAdminMembership
 from sector.models.sector import AdminSector
 from users.models.addresses import Province, District, Sector as AddressSector
@@ -55,9 +55,9 @@ class AdminLevel2DashboardView(LoginRequiredMixin, View):
 
         # Get latest sessions updated by those officers
         cell_updated_sessions = (
-            UmugandaSession.objects
-            .filter(updated_by_cell_admin__in=cell_officer_users_qs)
-            .select_related('updated_by_cell_admin', 'cell', 'village')
+            CellUmugandaSession.objects
+            .filter(updated_by__in=cell_officer_users_qs)
+            .select_related('updated_by', 'cell', 'village', 'sector_session')
             .order_by('-updated_at')[:20]
         )
 

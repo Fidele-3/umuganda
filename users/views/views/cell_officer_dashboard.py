@@ -5,9 +5,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now, timedelta
 
-from umuganda.models import UmugandaSession
-from users.models import CustomUser, UserProfile
-from users.models.addresses import Cell
+from umuganda.models import UmugandaSession, CellUmugandaSession
 from admn.models.cell_admin_membership import CellAdminMembership
 
 
@@ -34,27 +32,34 @@ class AdminLevel3DashboardView(View):
         today = now().date()
         scope = request.GET.get('scope', 'all')
 
-        # Get the most relevant Umuganda session for this cell
-        umuganda_session = UmugandaSession.objects.filter(
-            sector=cell.sector,
-            date__gte=today
-        ).order_by('date').first()  # Get the nearest upcoming session
+        # Filter cell-level sessions with related sector_session date >= today
+        cell_sessions_qs = CellUmugandaSession.objects.filter(
+            cell=cell,
+            sector_session__date__gte=today
+        ).select_related('sector_session').order_by('sector_session__date')
 
-        # Existing sessions list
-        queryset = UmugandaSession.objects.filter(cell=cell)
+        # Pick the nearest future (or today's) session
+        current_cell_session = cell_sessions_qs.first()
+
+        # Sessions filtering for dashboard
+        queryset = CellUmugandaSession.objects.filter(cell=cell)
+
         if scope == 'today':
-            queryset = queryset.filter(created_at__date=today)
+            queryset = queryset.filter(updated_at__date=today)
         elif scope == 'week':
             start_of_week = today - timedelta(days=today.weekday())
-            queryset = queryset.filter(created_at__date__gte=start_of_week)
+            queryset = queryset.filter(updated_at__date__gte=start_of_week)
 
-        queryset = queryset.order_by('-created_at')
+        queryset = queryset.order_by('-updated_at')
 
-        # Check if a sector session is pending for this cell's sector
-        pending_sector_sessions = UmugandaSession.objects.filter(
+        # Get sector sessions and check which are missing a cell-level version
+        sector_sessions = UmugandaSession.objects.filter(
             sector=cell.sector,
-            cell__isnull=True,
             date__gte=today
+        ).order_by('date')
+
+        pending_sector_sessions = sector_sessions.exclude(
+            id__in=CellUmugandaSession.objects.filter(cell=cell).values_list('sector_session_id', flat=True)
         )
         needs_attention = pending_sector_sessions.exists()
 
@@ -63,8 +68,8 @@ class AdminLevel3DashboardView(View):
             'cell': cell,
             'scope': scope,
             'sessions': queryset,
-            'umuganda_session': umuganda_session,  # Add this
-            'today': today,  # Add this
+            'umuganda_session': current_cell_session,  # ✅ Now using cell-level session
+            'today': today,
             'needs_attention': needs_attention,
             'create_deadline': today + timedelta(days=3),
         }
