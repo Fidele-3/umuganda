@@ -8,13 +8,13 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "fallback-secret")  # Must be set in Render
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "fallback-secret") 
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
+#ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
-#ALLOWED_HOSTS = ['http://10.0.2.2', '10.0.2.2', '127.0.0.1']
+ALLOWED_HOSTS = ['http://10.0.2.2', '10.0.2.2', '127.0.0.1']
 
 # DATABASE
 
@@ -36,8 +36,8 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-"""
 
+"""
 
 PUBLIC_API_URL = os.environ.get("PUBLIC_API_URL", "http://localhost:8000")
 
@@ -73,6 +73,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
+
 ]
 
 ROOT_URLCONF = "Umuganda.urls"
@@ -165,7 +167,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SITE_ID = 1
 TIME_ZONE = "Africa/Kigali"
 USE_I18N = True
-USE_TZ = True
+USE_TZ = False
 LANGUAGE_CODE = "en-us"
 
 import sys
@@ -181,13 +183,6 @@ LOGGING = {
         },
     },
 
-
-    "users.views.api_views.dashbord": {
-            "handlers": ["console"],
-            "level": "DEBUG",
-            "propagate": False,
-        },
-
     'root': {
         'handlers': ['console'],
        'level': 'DEBUG',  # Show everything
@@ -196,11 +191,11 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': 'INFO',  # Change to INFO or WARNING in production
+           'level': 'INFO',  # Change to INFO or WARNING in production
             'propagate': True,
         },
         'django.db.backends': {
-            'handlers': ['console'],
+           'handlers': ['console'],
             'level': 'DEBUG',  
         },
     },
