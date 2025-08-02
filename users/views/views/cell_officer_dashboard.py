@@ -32,16 +32,15 @@ class AdminLevel3DashboardView(View):
         today = now().date()
         scope = request.GET.get('scope', 'all')
 
-        # Filter cell-level sessions with related sector_session date >= today
+        # ✅ Get nearest cell-level session
         cell_sessions_qs = CellUmugandaSession.objects.filter(
             cell=cell,
             sector_session__date__gte=today
         ).select_related('sector_session').order_by('sector_session__date')
 
-        # Pick the nearest future (or today's) session
         current_cell_session = cell_sessions_qs.first()
 
-        # Sessions filtering for dashboard
+        # ✅ Sessions filtering for dashboard
         queryset = CellUmugandaSession.objects.filter(cell=cell)
 
         if scope == 'today':
@@ -52,7 +51,7 @@ class AdminLevel3DashboardView(View):
 
         queryset = queryset.order_by('-updated_at')
 
-        # Get sector sessions and check which are missing a cell-level version
+        # ✅ Find sector-level sessions for this cell's sector
         sector_sessions = UmugandaSession.objects.filter(
             sector=cell.sector,
             date__gte=today
@@ -63,14 +62,23 @@ class AdminLevel3DashboardView(View):
         )
         needs_attention = pending_sector_sessions.exists()
 
+        # ✅ Extract the date directly from the pending UmugandaSession
+        pending_session_date = None
+        if needs_attention:
+            first_pending = pending_sector_sessions.first()
+            if first_pending is not None:
+                pending_session_date = first_pending.date
+
+        # ✅ Always return a response
         context = {
             'admin': admin,
             'cell': cell,
             'scope': scope,
             'sessions': queryset,
-            'umuganda_session': current_cell_session,  # ✅ Now using cell-level session
+            'umuganda_session': current_cell_session,
             'today': today,
             'needs_attention': needs_attention,
+            'pending_session_date': pending_session_date,
             'create_deadline': today + timedelta(days=3),
         }
 

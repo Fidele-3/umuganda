@@ -14,6 +14,11 @@ class UmugandaFinesListView(View):
 
     def get(self, request, session_id):
         cell_session = get_object_or_404(CellUmugandaSession, id=session_id)
+
+        umuganda_date = None
+        if cell_session.sector_session:
+            umuganda_date = cell_session.sector_session.date
+
         user = request.user
 
         is_cell_officer = user.user_level == 'cell_officer'
@@ -52,7 +57,7 @@ class UmugandaFinesListView(View):
 
         for user_profile in absentees:
             fine, created = Fine.objects.get_or_create(
-                user=user_profile,
+                user=user_profile.user,
                 session=cell_session,
                 defaults={
                     'amount': 1000.00,
@@ -88,7 +93,8 @@ class UmugandaFinesListView(View):
             'total_fines_amount': total_fines_amount,
             'paid_fines_amount': paid_fines_amount,
             'pending_fines_amount': pending_fines_amount,
-            'overdue_fines_amount': overdue_fines_amount
+            'overdue_fines_amount': overdue_fines_amount,
+            'umuganda_date': umuganda_date,
         }
 
         return render(request, self.template_name, context)

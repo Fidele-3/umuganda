@@ -578,55 +578,71 @@
                 <h2><i class="fas fa-calendar-check"></i> Current Umuganda Activity</h2>
             </div>
 
-            {% if umuganda_session %}
-            <div class="umuganda-card">
-                <div class="umuganda-card-header">
-                    <h3><i class="fas fa-calendar-day"></i> {{ umuganda_session.sector_session.date|date:"F j, Y" }}</h3>
-                    <span class="umuganda-status 
-                        {% if umuganda_session.sector_session.date == today %}status-active
-                        {% elif umuganda_session.sector_session.date > today %}status-upcoming
-                        {% else %}status-completed{% endif %}">
-                        {% if umuganda_session.sector_session.date == today %}Active
-                        {% elif umuganda_session.sector_session.date > today %}Upcoming
-                        {% else %}Completed{% endif %}
-                    </span>
-                </div>
-
-                <div class="umuganda-details">
-                    <div class="detail-item">
-                        <h4><i class="fas fa-map-marker-alt"></i> Location</h4>
-                        <p>{{ umuganda_session.village|default:"To be determined" }}</p>
-                    </div>
-                    <div class="detail-item">
-                        <h4><i class="fas fa-clock"></i> Time</h4>
-                        <p>{{ umuganda_session.start_time|default:"7:00 AM" }} - {{ umuganda_session.end_time|default:"11:00 AM" }}</p>
-                    </div>
-                    <div class="detail-item">
-                        <h4><i class="fas fa-tools"></i> Required Tools</h4>
-                        <p>{{ umuganda_session.tools_needed|default:"No specific tools required" }}</p>
-                    </div>
-                    <div class="detail-item">
-                        <h4><i class="fas fa-info-circle"></i> Description</h4>
-                        <p>{{ umuganda_session.description|default:"No description provided" }}</p>
-                    </div>
-                </div>
-
-                <div class="action-buttons">
-                    {% if umuganda_session.date >= today %}
-                        <a href="{% url 'create_umuganda_session_view' %}" class="btn btn-primary">
-                            <i class="fas fa-edit"></i> Edit Session
+            {% if needs_attention %}
+                <div class="notification notification-warning">
+                    <i class="fas fa-exclamation-circle fa-2x"></i>
+                    <div>
+                        <h4>SHYIRAHO IBIRANGA UMUGANDA BIKENEWE</h4>
+                        <p>
+                            Kanda kuri <strong>Edit Umuganda Activity</strong> ushyiremo ibisabwa byose
+                            kugirango system ibone amakuru yose y'umuganda nabaturage mukagari kawe, kubera ko umuyobozi w'umurenge yawushyize kuri
+                            {{ pending_session_date|date:"F j, Y" }}
+                        </p>
+                        <a href="{% url 'create_umuganda_session_view' %}" class="btn btn-warning mt-2">
+                            Edit Umuganda Activity
                         </a>
-                        <a href="{% url 'umuganda_participants_list' umuganda_session.id %}" class="btn btn-success">
-                            <i class="fas fa-users"></i> Manage Participants
-                        </a>
-                    {% endif %}
+                    </div>
                 </div>
-            </div>
+            {% elif umuganda_session %}
+                <div class="umuganda-card">
+                    <div class="umuganda-card-header">
+                        <h3><i class="fas fa-calendar-day"></i> {{ umuganda_session.sector_session.date|date:"F j, Y" }}</h3>
+                        <span class="umuganda-status 
+                            {% if umuganda_session.sector_session.date == today %}status-active
+                            {% elif umuganda_session.sector_session.date > today %}status-upcoming
+                            {% else %}status-completed{% endif %}">
+                            {% if umuganda_session.sector_session.date == today %}Active
+                            {% elif umuganda_session.sector_session.date > today %}Upcoming
+                            {% else %}Completed{% endif %}
+                        </span>
+                    </div>
+
+                    <div class="umuganda-details">
+                        <div class="detail-item">
+                            <h4><i class="fas fa-map-marker-alt"></i> Location</h4>
+                            <p>{{ umuganda_session.village|default:"To be determined" }}</p>
+                        </div>
+                        <div class="detail-item">
+                            <h4><i class="fas fa-clock"></i> Time</h4>
+                            <p>{{ umuganda_session.start_time|default:"7:00 AM" }} - {{ umuganda_session.end_time|default:"11:00 AM" }}</p>
+                        </div>
+                        <div class="detail-item">
+                            <h4><i class="fas fa-tools"></i> Required Tools</h4>
+                            <p>{{ umuganda_session.tools_needed|default:"No specific tools required" }}</p>
+                        </div>
+                        <div class="detail-item">
+                            <h4><i class="fas fa-info-circle"></i> Description</h4>
+                            <p>{{ umuganda_session.description|default:"No description provided" }}</p>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        {% if umuganda_session.date >= today %}
+                            <a href="{% url 'create_umuganda_session_view' %}" class="btn btn-primary">
+                                <i class="fas fa-edit"></i> Edit Session
+                            </a>
+                            <a href="{% url 'umuganda_participants_list' umuganda_session.id %}" class="btn btn-success">
+                                <i class="fas fa-users"></i> Manage Participants
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
             {% else %}
                 <div class="alert alert-info">
                     <i class="fas fa-info-circle"></i> No Umuganda activity currently assigned to your cell.
                 </div>
             {% endif %}
+
 
             <!-- Recent Sessions Section -->
             <div class="page-header">

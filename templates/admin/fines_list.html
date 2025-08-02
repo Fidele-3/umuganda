@@ -507,7 +507,7 @@
     <div class="main-content">
         <div class="container">
             <div class="page-header">
-                <h2><i class="fas fa-money-bill-wave"></i> Fines for Umuganda Session on {{ session.date|date:"F j, Y" }}</h2>
+                <h2><i class="fas fa-money-bill-wave"></i> Fines for Umuganda Session on {{ session.sector_session.date|date:"F j, Y" }}</h2>
                 <div class="action-buttons">
                     <a href="{% url 'umuganda_session_detail' session.id %}" class="btn btn-secondary">
                         <i class="fas fa-arrow-left"></i> Back to Session
