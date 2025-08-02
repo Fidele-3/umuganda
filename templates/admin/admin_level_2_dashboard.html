@@ -394,6 +394,70 @@
             animation: pulse 2s infinite;
         }
 
+        /* New styles for important notices */
+        .important-notice {
+            background-color: #fff8e1;
+            border-left: 5px solid var(--warning-color);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            animation: pulseBorder 2s infinite;
+        }
+
+        .important-notice h3 {
+            color: var(--warning-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .important-notice h3 i {
+            font-size: 1.5rem;
+        }
+
+        .important-notice p {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .important-notice ul {
+            margin: 1rem 0 1rem 1.5rem;
+        }
+
+        .important-notice li {
+            margin-bottom: 0.5rem;
+        }
+
+        @keyframes pulseBorder {
+            0% { border-left-color: var(--warning-color); }
+            50% { border-left-color: #ffab00; }
+            100% { border-left-color: var(--warning-color); }
+        }
+
+        /* Additional style for cell officer notice */
+        .cell-officer-notice {
+            background-color: #e8f4fd;
+            border-left: 5px solid var(--info-color);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .cell-officer-notice h3 {
+            color: var(--info-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cell-officer-notice h3 i {
+            font-size: 1.5rem;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .nav-links {
@@ -480,6 +544,47 @@
                     <strong>Sector:</strong> {{ sector.name }}
                 </p>
             </section>
+            </section>
+
+            <!-- Umuganda Session Notice -->
+            {% if not display_umuganda_notice %}
+            <section class="important-notice">
+                <h3><i class="fas fa-exclamation-triangle"></i> Important Notice About Umuganda Activity Date</h3>
+                <p>For umuganda activity date:</p>
+                <ul>
+                    <li>You need to first add the umuganda activity date so that cell officers will have the info about when umuganda activity will be carried out.</li>
+                    <li>Otherwise it can't be possible for them to create, detail and place the umuganda activity without you adding the date when it will be carried on.</li>
+                </ul>
+                <div class="card-actions" style="margin-top: 1rem;">
+                    <a href="{% url 'create_umuganda_session' %}" class="btn btn-warning">
+                        <i class="fas fa-calendar-plus"></i> Schedule the Session
+                    </a>
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- Cell Officer Creation Notice (always visible) -->
+            <section class="cell-officer-notice">
+                <h3><i class="fas fa-info-circle"></i> Important Notice About Creating Cell Officers</h3>
+                <p>In order to create cell officer:</p>
+                <ul>
+                    <li>You need to click on create cell officer button</li>
+                    <li>Fill in all required information</li>
+                    <li>Make sure that cell officer is assigned to unique cell, otherwise it will become an error</li>
+                    <li>Each cell will have one unique admin</li>
+                    <li>Before creating cell officer, first check your cell officers in dashboard(view down the page) and see the cells they are assigned to so that you don't duplicate</li>
+                </ul>
+                <div class="card-actions" style="margin-top: 1rem;">
+                    <a href="{% url 'create_cell_officer' %}" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Create Cell Officer
+                    </a>
+            
+                </div>
+            </section>
+
+            <div class="dashboard-cards">
+                <!-- Dashboard cards remain the same -->
+            </div>
 
             <div class="dashboard-cards">
                 <div class="card card-primary">
