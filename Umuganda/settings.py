@@ -36,8 +36,8 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
 """
+
 
 PUBLIC_API_URL = os.environ.get("PUBLIC_API_URL", "http://localhost:8000")
 

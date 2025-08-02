@@ -360,6 +360,48 @@
             border-left: 4px solid var(--warning-color);
         }
 
+        /* Important Notice Section */
+        .important-notice {
+            background-color: #fff8e1;
+            border-left: 5px solid var(--warning-color);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            animation: pulseBorder 2s infinite;
+        }
+
+        .important-notice h3 {
+            color: var(--warning-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .important-notice h3 i {
+            font-size: 1.5rem;
+        }
+
+        .important-notice p {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .important-notice ul {
+            margin: 1rem 0 1rem 1.5rem;
+        }
+
+        .important-notice li {
+            margin-bottom: 0.5rem;
+        }
+
+        @keyframes pulseBorder {
+            0% { border-left-color: var(--warning-color); }
+            50% { border-left-color: #ffab00; }
+            100% { border-left-color: var(--warning-color); }
+        }
+
         /* Footer */
         footer {
             background: linear-gradient(135deg, var(--dark-color), #1a1a1a);
@@ -485,6 +527,27 @@
             </a>
         </section>
 
+        <!-- Important Notice Section -->
+        <section class="important-notice">
+            <h3><i class="fas fa-exclamation-triangle"></i> Important Notice About Sector Officers</h3>
+            <p>Before creating a Sector Officer, you must follow these steps:</p>
+            <ul>
+                <li>First create the Sector that the officer will manage via the <strong>Add Sector</strong> button</li>
+                <li>After creating the Sector, you can then create the Sector Officer</li>
+                <li>Each Sector Officer must be assigned to only one Sector</li>
+                <li>If a Sector already has an assigned Officer, you will encounter an error</li>
+            </ul>
+            <p><strong>Remember:</strong> It's mandatory that one Sector must have exactly one Officer.</p>
+            <div class="action-buttons" style="margin-top: 1rem;">
+                <a href="{% url 'create_sector' %}" class="btn btn-warning">
+                    <i class="fas fa-building"></i> Create Sector First
+                </a>
+                <a href="{% url 'create_sector_officer' %}" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Then Create Officer
+                </a>
+            </div>
+        </section>
+
         <section class="stats-section">
             <div class="stat-card">
                 <h3>Total Citizens</h3>
@@ -517,15 +580,7 @@
                 <a href="{% url 'create_sector_officer' %}" class="btn btn-success">
                     <i class="fas fa-user-plus"></i> Add Sector Officer
                 </a>
-                <a href="{% url 'create_cell_officer' %}" class="btn btn-success">
-                    <i class="fas fa-user-plus"></i> Add Cell Officer
-                </a>
-                <a href="{% url 'superadmin_umuganda_overview' %}" class="btn btn-success">
-                    <i class="fas fa-calendar-check"></i> View Umuganda Overview
-                </a>
-                <a href="{% url 'create_umuganda_session' %}" class="btn btn-success">
-                    <i class="fas fa-plus-circle"></i> Create Umuganda Session
-                </a>
+            
             </div>
         </section>
 
@@ -582,7 +637,7 @@
                             <tr>
                                 <td>{{ admin.admin.full_names }}</td>
                                 <td>{{ admin.admin.email }}</td>
-                                <td>{{ admin.admin.sector.name }}</td>
+                                <td>{{ admin.admin.sector_name }}</td>
                                 <td>{{ admin.created_at|date:"Y-m-d" }}</td>
                             </tr>
                         {% endfor %}
