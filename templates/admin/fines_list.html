@@ -611,23 +611,7 @@
                                         {% endif %}
                                     </td>
                                     <td>{{ fine.reason|truncatechars:30 }}</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <a href="{% url 'umuganda_fine_detail' fine.id %}" class="btn btn-sm btn-primary" title="View">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            {% if fine.status != 'PAID' %}
-                                                <a href="{% url 'umuganda_fine_mark_paid' fine.id %}" class="btn btn-sm btn-success" title="Mark Paid">
-                                                    <i class="fas fa-check-circle"></i>
-                                                </a>
-                                            {% endif %}
-                                            {% if fine.status != 'WAIVED' %}
-                                                <a href="{% url 'umuganda_fine_waive' fine.id %}" class="btn btn-sm btn-secondary" title="Waive">
-                                                    <i class="fas fa-hand-holding-heart"></i>
-                                                </a>
-                                            {% endif %}
-                                        </div>
-                                    </td>
+                                    
                                 </tr>
                             {% empty %}
                                 <tr>
