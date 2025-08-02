@@ -6,7 +6,6 @@ from users.models.userprofile import UserProfile
 from umuganda.models import CellUmugandaSession, Attendance, Fine
 from admn.models.cell_admin_membership import CellAdminMembership
 from admn.models.sector_membership import sectorAdminMembership
-import math
 
 
 class UmugandaFinesListView(View):
@@ -14,11 +13,6 @@ class UmugandaFinesListView(View):
 
     def get(self, request, session_id):
         cell_session = get_object_or_404(CellUmugandaSession, id=session_id)
-
-        umuganda_date = None
-        if cell_session.sector_session:
-            umuganda_date = cell_session.sector_session.date
-
         user = request.user
 
         is_cell_officer = user.user_level == 'cell_officer'
@@ -83,9 +77,9 @@ class UmugandaFinesListView(View):
 
         # 🔢 Summary amounts
         total_fines_amount = sum(f.amount for f in fines_to_render)
-        paid_fines_amount = sum(f.amount for f in fines_to_render if f.status == 'PAID')
-        pending_fines_amount = sum(f.amount for f in fines_to_render if f.status == 'PENDING')
-        overdue_fines_amount = sum(f.amount for f in fines_to_render if f.months_overdue > 0)
+        paid_fines_amount = sum(f.amount for f in fines_to_render if f.status == 'paid')      # note: use lowercase 'paid' to match model default
+        pending_fines_amount = sum(f.amount for f in fines_to_render if f.status == 'unpaid')  # same here for 'unpaid'
+        overdue_fines_amount = sum(f.amount for f in fines_to_render if f.moths_overdue > 0)
 
         context = {
             'session': cell_session,
@@ -93,8 +87,7 @@ class UmugandaFinesListView(View):
             'total_fines_amount': total_fines_amount,
             'paid_fines_amount': paid_fines_amount,
             'pending_fines_amount': pending_fines_amount,
-            'overdue_fines_amount': overdue_fines_amount,
-            'umuganda_date': umuganda_date,
+            'overdue_fines_amount': overdue_fines_amount
         }
 
         return render(request, self.template_name, context)
